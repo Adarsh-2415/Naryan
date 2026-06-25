@@ -182,7 +182,7 @@ export async function sendBookingEmail(data: BookingEmailParams) {
     <div style="font-family: 'Inter', Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 30px; border: 1px solid #f1f5f9; border-radius: 20px; background-color: #ffffff; color: #0f172a;">
       <div style="border-bottom: 2px solid #001b4b; padding-bottom: 15px; margin-bottom: 25px;">
         <h2 style="color: #001b4b; font-family: 'Poppins', sans-serif; font-size: 20px; margin: 0; font-weight: 700;">New Consultation Booked</h2>
-        <p style="font-size: 11px; text-transform: uppercase; font-weight: bold; tracking-wider; margin: 5px 0 0 0; color: #22c55e;">Alert Notification</p>
+        <p style="font-size: 11px; text-transform: uppercase; font-weight: bold; margin: 5px 0 0 0; color: #22c55e;">Alert Notification</p>
       </div>
       <p style="font-size: 14px; line-height: 1.6; margin-bottom: 20px;">A new appointment has been scheduled in the patient registry:</p>
       <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; margin-bottom: 20px;">
@@ -190,6 +190,26 @@ export async function sendBookingEmail(data: BookingEmailParams) {
           <tr style="border-bottom: 1px solid #f1f5f9;">
             <td style="padding: 8px 0; font-weight: bold; color: #475569;">Patient Name</td>
             <td style="padding: 8px 0; text-align: right; font-weight: bold;">${data.fullName}</td>
+          </tr>
+          <tr style="border-bottom: 1px solid #f1f5f9;">
+            <td style="padding: 8px 0; font-weight: bold; color: #475569;">Patient Phone</td>
+            <td style="padding: 8px 0; text-align: right;">${data.phone}</td>
+          </tr>
+          <tr style="border-bottom: 1px solid #f1f5f9;">
+            <td style="padding: 8px 0; font-weight: bold; color: #475569;">Patient Email</td>
+            <td style="padding: 8px 0; text-align: right;">${data.email}</td>
+          </tr>
+          <tr style="border-bottom: 1px solid #f1f5f9;">
+            <td style="padding: 8px 0; font-weight: bold; color: #475569;">Appointment Date</td>
+            <td style="padding: 8px 0; text-align: right; font-weight: bold;">${data.date}</td>
+          </tr>
+          <tr style="border-bottom: 1px solid #f1f5f9;">
+            <td style="padding: 8px 0; font-weight: bold; color: #475569;">Time Slot</td>
+            <td style="padding: 8px 0; text-align: right; font-weight: bold; color: #22c55e;">${data.time}</td>
+          </tr>
+          <tr>
+            <td style="padding: 8px 0; font-weight: bold; color: #475569;">Booking ID</td>
+            <td style="padding: 8px 0; text-align: right; font-weight: bold; color: #018abe;">${data.appointmentId}</td>
           </tr>
         </table>
       </div>
