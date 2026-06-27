@@ -154,7 +154,7 @@ export async function sendBookingEmail(data: BookingEmailParams) {
     <div style="font-family: 'Inter', Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 30px; border: 1px solid #f1f5f9; border-radius: 20px; background-color: #ffffff; color: #0f172a;">
       <div style="text-align: center; border-bottom: 2px solid #001b4b; padding-bottom: 20px; margin-bottom: 25px;">
         <h2 style="color: #001b4b; font-family: 'Poppins', sans-serif; font-size: 24px; margin: 0; font-weight: 700; letter-spacing: -0.5px;">Narayan Homoeopathic Chikitsalaya</h2>
-        <p style="font-size: 11px; text-transform: uppercase; font-weight: bold; tracking-wider; margin: 5px 0 0 0; color: #018abe;">Appointment Confirmation</p>
+        <p style="font-size: 11px; text-transform: uppercase; font-weight: bold; margin: 5px 0 0 0; color: #018abe;">Appointment Confirmation</p>
       </div>
       <p style="font-size: 14px; line-height: 1.6; margin-bottom: 20px;">Dear <strong>${data.fullName}</strong>,</p>
       <p style="font-size: 14px; line-height: 1.6; margin-bottom: 20px;">Your constitutional homeopathy consultation has been successfully scheduled. Details are outlined below:</p>
@@ -172,8 +172,16 @@ export async function sendBookingEmail(data: BookingEmailParams) {
             <td style="padding: 8px 0; font-weight: bold; color: #475569;">Time Slot</td>
             <td style="padding: 8px 0; text-align: right; font-weight: bold; color: #22c55e;">${data.time} (30 mins)</td>
           </tr>
+          <tr>
+            <td style="padding: 8px 0; font-weight: bold; color: #475569;">Center Location</td>
+            <td style="padding: 8px 0; text-align: right; font-weight: 500;">First street, Neelam cinema crossing 32, Jamun Road, Civil Lines, Roorkee</td>
+          </tr>
         </table>
       </div>
+      <div style="text-align: center; margin-bottom: 25px;">
+        <a href="https://maps.google.com/?q=Narayan+Homoeopathic+Chikitsalaya+Roorkee" style="display: inline-block; background-color: #001b4b; color: #ffffff; text-decoration: none; font-size: 14px; font-weight: 700; padding: 12px 32px; border-radius: 50px;">View on Google Maps</a>
+      </div>
+      <p style="font-size: 12px; color: #94a3b8; text-align: center; line-height: 1.6;">If you need to change your appointment date/time, please contact us at <strong style="color: #475569;">+91-1332 270021</strong>.</p>
     </div>
   `;
 
