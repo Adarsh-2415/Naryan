@@ -8,7 +8,7 @@ export const sendDoctorNotification = async (data: BookingData) => {
   try {
     await transporter.sendMail({
       from: process.env.EMAIL_FROM || '"Narayan Clinic" <homoeopathy4u@gmail.com>',
-      to: process.env.EMAIL_FROM || '"Narayan Clinic" <homoeopathy4u@gmail.com>', // Sending alert to the clinic itself
+      to: process.env.EMAIL_USER || 'homoeopathy4u@gmail.com', // Sending alert to the admin's inbox
       subject: `[ALERT] New Appointment Booking - ${data.appointmentId}`,
       html,
     });

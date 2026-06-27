@@ -84,7 +84,9 @@ export async function POST(req: Request) {
       
     if (insertError || !insertedData) {
       console.error("Database insert error:", insertError);
-      return NextResponse.json({ error: "Failed to save booking. Please try again." }, { status: 500 });
+      return NextResponse.json({ 
+        error: `Supabase Error: ${insertError?.message || "Failed to save booking"}` 
+      }, { status: 500 });
     }
     
     // Generated Appointment ID using prefix or DB UUID. The UI expects an ID like NHC-YYYY-XXXX.

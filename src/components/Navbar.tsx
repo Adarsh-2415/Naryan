@@ -42,100 +42,49 @@ export default function Navbar() {
               className="object-contain object-left"
             />
           </div>
-          <span className="font-heading font-bold text-[10px] min-[390px]:text-xs sm:text-sm text-brand-dark leading-tight tracking-tight shrink-0 border-l border-slate-200 pl-3 inline-block whitespace-nowrap">
-            Narayan Homoeopathic
+          <span className="font-heading font-bold text-[10px] min-[390px]:text-xs sm:text-sm text-brand-dark leading-tight tracking-tight border-l border-slate-200 pl-2 sm:pl-3">
+            Narayan Homoeopathic <br className="sm:hidden" /> Chikitsalaya
           </span>
         </a>
 
-        {/* Desktop Navigation Link System - Centered on Desktop */}
-        <nav className="hidden lg:flex items-center gap-6 xl:gap-8 font-medium text-xs xl:text-sm justify-center flex-grow mx-auto">
-          <a
-            href="/"
-            className="text-brand-dark hover:text-brand-secondary transition-colors whitespace-nowrap"
-          >
-            Home
-          </a>
-          <a
-            href="/about"
-            className="text-brand-dark/80 hover:text-brand-secondary transition-colors whitespace-nowrap"
-          >
-            About Us
-          </a>
-          <a
-            href="/treatments"
-            className="text-brand-dark/80 hover:text-brand-secondary transition-colors whitespace-nowrap"
-          >
-            Our Treatments
-          </a>
-          <a
-            href="/gallery"
-            className="text-brand-dark/80 hover:text-brand-secondary transition-colors whitespace-nowrap"
-          >
-            Gallery
-          </a>
+        {/* Desktop Navigation Link System - Centered and constrained to align with Logo/Title above */}
+        <div className="hidden lg:flex items-center justify-between w-full max-w-[950px] mx-auto">
+          <nav className="flex items-center gap-6 xl:gap-8 font-medium text-xs xl:text-sm">
+            <a href="/" className="text-brand-dark hover:text-brand-secondary transition-colors whitespace-nowrap">Home</a>
+            <a href="/about" className="text-brand-dark/80 hover:text-brand-secondary transition-colors whitespace-nowrap">About Us</a>
+            <a href="/treatments" className="text-brand-dark/80 hover:text-brand-secondary transition-colors whitespace-nowrap">Our Treatments</a>
+            <a href="/gallery" className="text-brand-dark/80 hover:text-brand-secondary transition-colors whitespace-nowrap">Gallery</a>
 
-          {/* Blog Dropdown */}
-          <div
-            className="relative"
-            onMouseEnter={() => setIsDropdownOpen(true)}
-            onMouseLeave={() => setIsDropdownOpen(false)}
-          >
-            <button
-              className="flex items-center gap-1 text-brand-dark/80 hover:text-brand-secondary transition-colors focus:outline-none py-2 whitespace-nowrap"
-              aria-expanded={isDropdownOpen}
-              aria-haspopup="true"
-            >
-              <span>Blog</span>
-              <ChevronDown size={14} className={`transition-transform duration-200 ${isDropdownOpen ? "rotate-180" : ""}`} />
-            </button>
+            {/* Blog Dropdown */}
+            <div className="relative" onMouseEnter={() => setIsDropdownOpen(true)} onMouseLeave={() => setIsDropdownOpen(false)}>
+              <button className="flex items-center gap-1 text-brand-dark/80 hover:text-brand-secondary transition-colors focus:outline-none py-2 whitespace-nowrap" aria-expanded={isDropdownOpen} aria-haspopup="true">
+                <span>Blog</span>
+                <ChevronDown size={14} className={`transition-transform duration-200 ${isDropdownOpen ? "rotate-180" : ""}`} />
+              </button>
+              {isDropdownOpen && (
+                <div className="absolute left-0 mt-0 w-48 rounded-xl bg-white shadow-xl border border-slate-100 py-2 z-50 animate-in fade-in slide-in-from-top-2 duration-200">
+                  <a href="/awards" className="block px-4 py-2.5 text-sm text-brand-dark/80 hover:bg-slate-50 hover:text-brand-secondary transition-colors whitespace-nowrap">Awards</a>
+                  <a href="/case-studies" className="block px-4 py-2.5 text-sm text-brand-dark/80 hover:bg-slate-50 hover:text-brand-secondary transition-colors whitespace-nowrap">Case Studies</a>
+                  <a href="/seminars" className="block px-4 py-2.5 text-sm text-brand-dark/80 hover:bg-slate-50 hover:text-brand-secondary transition-colors whitespace-nowrap">Seminars</a>
+                </div>
+              )}
+            </div>
 
-            {isDropdownOpen && (
-              <div className="absolute left-0 mt-0 w-48 rounded-xl bg-white shadow-xl border border-slate-100 py-2 z-50 animate-in fade-in slide-in-from-top-2 duration-200">
-                <a
-                  href="/awards"
-                  className="block px-4 py-2.5 text-sm text-brand-dark/80 hover:bg-slate-50 hover:text-brand-secondary transition-colors whitespace-nowrap"
-                >
-                  Awards
-                </a>
-                <a
-                  href="/case-studies"
-                  className="block px-4 py-2.5 text-sm text-brand-dark/80 hover:bg-slate-50 hover:text-brand-secondary transition-colors whitespace-nowrap"
-                >
-                  Case Studies
-                </a>
-                <a
-                  href="/seminars"
-                  className="block px-4 py-2.5 text-sm text-brand-dark/80 hover:bg-slate-50 hover:text-brand-secondary transition-colors whitespace-nowrap"
-                >
-                  Seminars
-                </a>
-              </div>
-            )}
-          </div>
+            <a href="/#contact" className="text-brand-dark/80 hover:text-brand-secondary transition-colors whitespace-nowrap">Contact Us</a>
+          </nav>
 
-          <a
-            href="/#contact"
-            className="text-brand-dark/80 hover:text-brand-secondary transition-colors whitespace-nowrap"
-          >
-            Contact Us
-          </a>
-        </nav>
-
-        {/* CTA and Mobile Toggle */}
-        <div className="flex items-center gap-4">
-          <a
-            href="/booking"
-            className="hidden sm:inline-flex bg-cta hover:bg-cta-hover text-white font-semibold text-sm px-6 py-2.5 rounded-full transition-all duration-200 shadow-md shadow-cta/20 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-cta/50"
-          >
+          {/* Desktop CTA */}
+          <a href="/booking" className="bg-cta hover:bg-cta-hover text-white font-semibold text-sm px-6 py-2.5 rounded-full transition-all duration-200 shadow-md shadow-cta/20 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-cta/50">
             Book Appointment
           </a>
+        </div>
 
-          {/* Hamburger button for mobile */}
-          <button
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="lg:hidden text-brand-dark p-2 hover:bg-slate-100 rounded-lg focus:outline-none"
-            aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
-          >
+        {/* Mobile CTA and Toggle (Visible only on smaller screens) */}
+        <div className="flex lg:hidden items-center gap-4 ml-auto">
+          <a href="/booking" className="hidden sm:inline-flex bg-cta hover:bg-cta-hover text-white font-semibold text-sm px-6 py-2.5 rounded-full transition-all duration-200 shadow-md shadow-cta/20 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-cta/50">
+            Book
+          </a>
+          <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="text-brand-dark p-2 hover:bg-slate-100 rounded-lg focus:outline-none" aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}>
             {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>

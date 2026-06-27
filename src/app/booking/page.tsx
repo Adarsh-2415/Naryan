@@ -299,15 +299,8 @@ export default function BookingPage() {
       }));
       setCurrentStep(4);
     } catch (err: any) {
-      console.warn("Booking request failed, falling back to local simulation:", err);
-      const fallbackId = `NHC-${year}-${randomSeq}`;
-      
-      setAppointmentId(fallbackId);
-      setLocalBookings(prev => ({
-        ...prev,
-        [selectedDate]: [...(prev[selectedDate] || []), selectedSlot]
-      }));
-      setCurrentStep(4);
+      console.error("Booking request failed:", err);
+      setErrors({ submit: err.message || "Failed to process booking. Please try again." });
     } finally {
       setSubmitting(false);
     }
@@ -693,6 +686,13 @@ export default function BookingPage() {
                       <strong>Note on Double-Booking Guard:</strong> This appointment slot is locked to you temporarily. Final database write triggers once you click "Confirm Booking".
                     </p>
                   </div>
+                  
+                  {errors.submit && (
+                    <div className="bg-red-50/50 border border-red-100 rounded-2xl p-4 flex items-start gap-3 text-xs text-red-600 font-medium">
+                      <AlertCircle size={16} className="shrink-0 mt-0.5" />
+                      <p>{errors.submit}</p>
+                    </div>
+                  )}
 
                   <div className="flex justify-between items-center pt-6 border-t border-slate-100">
                     <button

@@ -319,10 +319,10 @@ export default function AboutPage() {
               <div className="bg-white rounded-[2.5rem] overflow-hidden border border-slate-100 shadow-xl transition-all duration-300 hover:shadow-2xl flex flex-col">
                 <div className="relative aspect-[4/5] w-full bg-slate-50">
                   <Image
-                    src="/doctor-3-new.jpg"
+                    src="/doctor-asha-sharma.jpg"
                     alt="Dr. Asha Sharma"
                     fill
-                    className="object-cover"
+                    className="object-cover object-top"
                   />
                 </div>
                 <div className="p-8 text-center space-y-4 flex-grow flex flex-col">
