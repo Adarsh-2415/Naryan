@@ -67,14 +67,14 @@ export default function AdminDashboard() {
   const stats = data?.stats;
 
   const summaryCards = [
-    { title: "Today's Appointments", value: stats?.todayAppointments, icon: Calendar, link: "/admin/appointments?scope=today", color: "bg-emerald-50 text-emerald-600 border-emerald-100", trend: "+12%" },
-    { title: "Upcoming Bookings", value: stats?.upcomingAppointments, icon: Users, link: "/admin/appointments?scope=upcoming", color: "bg-blue-50 text-blue-600 border-blue-100", trend: "+5%" },
-    { title: "Total Treatments", value: stats?.totalTreatments, icon: Layers, link: "/admin/content?tab=treatments", color: "bg-indigo-50 text-indigo-600 border-indigo-100", trend: "Steady" },
-    { title: "Gallery Images", value: stats?.totalGalleryImages, icon: Image, link: "/admin/content?tab=gallery", color: "bg-amber-50 text-amber-600 border-amber-100", trend: "Fixed" },
-    { title: "Total Testimonials", value: stats?.totalTestimonials, icon: MessageSquare, link: "/admin/content?tab=testimonials", color: "bg-purple-50 text-purple-600 border-purple-100", trend: "+3 new" },
-    { title: "Total Awards", value: stats?.totalAwards, icon: Award, link: "/admin/content?tab=awards", color: "bg-rose-50 text-rose-600 border-rose-100", trend: "Fixed" },
-    { title: "Total Case Studies", value: stats?.totalCaseStudies, icon: BookOpen, link: "/admin/content?tab=case-studies", color: "bg-sky-50 text-sky-600 border-sky-100", trend: "+1 new" },
-    { title: "Total Seminars", value: stats?.totalSeminars, icon: Video, link: "/admin/content?tab=seminars", color: "bg-teal-50 text-teal-600 border-teal-100", trend: "Planned" },
+    { title: "Today's Appointments", value: stats?.todayAppointments, icon: Calendar, link: "/admin", color: "bg-emerald-50 text-emerald-600 border-emerald-100", trend: "+12%" },
+    { title: "Upcoming Bookings", value: stats?.upcomingAppointments, icon: Users, link: "/admin", color: "bg-blue-50 text-blue-600 border-blue-100", trend: "+5%" },
+    { title: "Total Treatments", value: stats?.totalTreatments, icon: Layers, link: "/admin", color: "bg-indigo-50 text-indigo-600 border-indigo-100", trend: "Steady" },
+    { title: "Gallery Images", value: stats?.totalGalleryImages, icon: Image, link: "/admin", color: "bg-amber-50 text-amber-600 border-amber-100", trend: "Fixed" },
+    { title: "Total Testimonials", value: stats?.totalTestimonials, icon: MessageSquare, link: "/admin", color: "bg-purple-50 text-purple-600 border-purple-100", trend: "+3 new" },
+    { title: "Total Awards", value: stats?.totalAwards, icon: Award, link: "/admin", color: "bg-rose-50 text-rose-600 border-rose-100", trend: "Fixed" },
+    { title: "Total Case Studies", value: stats?.totalCaseStudies, icon: BookOpen, link: "/admin", color: "bg-sky-50 text-sky-600 border-sky-100", trend: "+1 new" },
+    { title: "Total Seminars", value: stats?.totalSeminars, icon: Video, link: "/admin", color: "bg-teal-50 text-teal-600 border-teal-100", trend: "Planned" },
   ];
 
   return (
@@ -134,7 +134,7 @@ export default function AdminDashboard() {
               <p className="text-xs text-text-body">Monitoring outbound delivery status</p>
             </div>
             <Link 
-              href="/admin/email-logs"
+              href="/admin"
               className="text-xs font-bold text-[#018ABE] hover:underline flex items-center gap-1"
             >
               View Full Logs <ArrowRight className="h-3.5 w-3.5" />
@@ -188,7 +188,7 @@ export default function AdminDashboard() {
                     Some booking notification emails failed to dispatch. Inspect raw server reports and trigger a manual retry to avoid patient service disruptions.
                   </p>
                   <Link 
-                    href="/admin/email-logs?filter=Failed" 
+                    href="/admin" 
                     className="inline-block text-xs font-bold text-rose-800 hover:underline pt-1.5"
                   >
                     Go to Failed Queue &rarr;

@@ -1,124 +1,121 @@
-import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@supabase/supabase-js";
-import { sendBookingEmail } from "@/lib/email";
+import { NextResponse } from "next/server";
+import { supabase } from "@/lib/supabase";
+import { sendPatientConfirmation } from "@/lib/email/sendPatientConfirmation";
+import { sendDoctorNotification } from "@/lib/email/sendDoctorNotification";
 
-// Initialize backend Supabase client using environment variables
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
-const supabase = supabaseUrl && supabaseAnonKey ? createClient(supabaseUrl, supabaseAnonKey) : null;
+export async function POST(req: Request) {
+  if (!supabase) {
+    return NextResponse.json({ error: "Database not configured" }, { status: 500 });
+  }
 
-export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
+    
+    // 1. Basic validation
     const { fullName, email, phone, address, age, gender, reason, date, time } = body;
-
-    // Basic server-side validations
+    
     if (!fullName || !email || !phone || !address || !date || !time) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
-
+    
+    // 2. Validate against past dates
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const selectedDateObj = new Date(date);
+    
+    if (selectedDateObj < today) {
+      return NextResponse.json({ error: "Cannot book an appointment in the past" }, { status: 400 });
+    }
+    
+    // 3. Validate against past time slots for today
+    const todayStr = new Date().toISOString().split("T")[0];
+    if (date === todayStr) {
+      const now = new Date();
+      const [timeStr, modifier] = time.split(" ");
+      let [hoursStr, minutesStr] = timeStr.split(":");
+      let hours = parseInt(hoursStr, 10);
+      const minutes = parseInt(minutesStr, 10);
+      
+      if (hours === 12) hours = 0;
+      if (modifier === "PM") hours += 12;
+      
+      const slotTime = new Date();
+      slotTime.setHours(hours, minutes, 0, 0);
+      
+      if (now > slotTime) {
+        return NextResponse.json({ error: "Cannot book a past time slot for today" }, { status: 400 });
+      }
+    }
+    
+    // 4. Double booking prevention
+    const { data: existingBookings, error: checkError } = await supabase
+      .from("appointments")
+      .select("id")
+      .eq("appointment_date", date)
+      .eq("appointment_time", time)
+      .neq("status", "cancelled");
+      
+    if (checkError) {
+      console.error("Database check error:", checkError);
+      return NextResponse.json({ error: "Failed to verify slot availability" }, { status: 500 });
+    }
+    
+    if (existingBookings && existingBookings.length > 0) {
+      return NextResponse.json({ error: "This slot is already booked. Please select another time." }, { status: 409 });
+    }
+    
+    // 5. Database Insertion
+    const { data: insertedData, error: insertError } = await supabase
+      .from("appointments")
+      .insert({
+        full_name: fullName,
+        email: email,
+        phone: phone,
+        address: address,
+        age: age ? parseInt(age) : null,
+        gender: gender || null,
+        reason: reason || null,
+        appointment_date: date,
+        appointment_time: time,
+        status: "confirmed"
+      })
+      .select("id")
+      .single();
+      
+    if (insertError || !insertedData) {
+      console.error("Database insert error:", insertError);
+      return NextResponse.json({ error: "Failed to save booking. Please try again." }, { status: 500 });
+    }
+    
+    // Generated Appointment ID using prefix or DB UUID. The UI expects an ID like NHC-YYYY-XXXX.
+    // For simplicity, we generate one to return to the UI and put in the email, since UI generates it randomly if not returned.
     const year = new Date().getFullYear();
     const randomSeq = Math.floor(1000 + Math.random() * 9000);
-    const generatedId = `NHC-${year}-${randomSeq}`;
-
-    if (supabase) {
-      // 1. Check or insert patient record
-      let patientId;
-      const { data: existingPatient } = await supabase
-        .from("patients")
-        .select("id")
-        .eq("email", email)
-        .maybeSingle();
-
-      if (existingPatient) {
-        patientId = existingPatient.id;
-      } else {
-        const { data: newPatient, error: pError } = await supabase
-          .from("patients")
-          .insert({
-            full_name: fullName,
-            email: email,
-            phone_number: phone,
-            address: address,
-            age: age ? parseInt(age) : null,
-            gender: gender || null
-          })
-          .select("id")
-          .single();
-
-        if (pError) throw pError;
-        patientId = newPatient.id;
-      }
-
-      // Convert selected 12h time label to 24h format (e.g. "09:30 AM" -> "09:30:00")
-      const [timeStr, modifier] = time.split(" ");
-      let [hours, minutes] = timeStr.split(":");
-      if (hours === "12") {
-        hours = "00";
-      }
-      if (modifier === "PM") {
-        hours = (parseInt(hours, 10) + 12).toString();
-      }
-      const time24 = `${hours.padStart(2, "0")}:${minutes}:00`;
-
-      // 2. Double Booking Lock Protection check
-      const { data: conflicts } = await supabase
-        .from("appointments")
-        .select("id")
-        .eq("appointment_date", date)
-        .eq("appointment_time", time24)
-        .neq("status", "cancelled");
-
-      if (conflicts && conflicts.length >= 1) {
-        return NextResponse.json({ error: "This slot is already booked" }, { status: 409 });
-      }
-
-      // 3. Insert Appointment
-      const { data: newApp, error: appError } = await supabase
-        .from("appointments")
-        .insert({
-          appointment_id_custom: generatedId,
-          patient_id: patientId,
-          appointment_date: date,
-          appointment_time: time24,
-          reason_for_visit: reason || null,
-          status: "confirmed"
-        })
-        .select("id")
-        .single();
-
-      if (appError) throw appError;
-
-      // 4. Send Confirmation & Alert Emails via SMTP
-      await sendBookingEmail({
-        appointmentId: generatedId,
-        appointmentUuid: newApp?.id,
-        fullName,
-        email,
-        phone,
-        address,
-        date,
-        time,
-        reason
-      });
-    } else {
-      // 4. Fallback when Supabase is not loaded
-      await sendBookingEmail({
-        appointmentId: generatedId,
-        fullName,
-        email,
-        phone,
-        address,
-        date,
-        time,
-        reason
-      });
-    }
-
-    return NextResponse.json({ success: true, appointmentId: generatedId });
-  } catch (error: any) {
-    console.error("Booking handler API exception:", error);
-    return NextResponse.json({ error: error.message || "Failed to process booking" }, { status: 500 });
+    const appointmentId = `NHC-${year}-${randomSeq}`;
+    
+    const bookingData = {
+      appointmentId,
+      fullName,
+      email,
+      phone,
+      address,
+      age: age ? parseInt(age) : 0,
+      gender: gender || "",
+      reason: reason || "",
+      date,
+      timeSlot: time,
+    };
+    
+    // 6. Dispatch Emails concurrently
+    await Promise.allSettled([
+      sendPatientConfirmation(bookingData),
+      sendDoctorNotification(bookingData)
+    ]);
+    
+    return NextResponse.json({ success: true, appointmentId });
+    
+  } catch (error) {
+    console.error("Unexpected booking error:", error);
+    return NextResponse.json({ error: "An unexpected error occurred" }, { status: 500 });
   }
 }
-

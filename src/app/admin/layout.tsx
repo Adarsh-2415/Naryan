@@ -6,17 +6,10 @@ import Link from "next/link";
 import { supabase } from "@/lib/supabase";
 import { 
   Home, 
-  Calendar, 
-  Mail, 
-  FileText, 
-  Activity, 
   LogOut, 
   Menu, 
   X, 
-  User, 
-  Loader2,
-  Settings,
-  MailCheck
+  Loader2
 } from "lucide-react";
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -87,12 +80,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   const menuItems = [
     { name: "Overview", href: "/admin", icon: Home },
-    { name: "Appointments", href: "/admin/appointments", icon: Calendar },
-    { name: "Contact Enquiries", href: "/admin/enquiries", icon: Mail },
-    { name: "Email Delivery Logs", href: "/admin/email-logs", icon: Activity },
-    { name: "Content Workflows", href: "/admin/content", icon: FileText },
-    { name: "Email Templates", href: "/admin/email-templates", icon: MailCheck },
-    { name: "Global Settings", href: "/admin/settings", icon: Settings },
   ];
 
   return (

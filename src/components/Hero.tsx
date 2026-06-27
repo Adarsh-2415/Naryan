@@ -82,12 +82,12 @@ export default function Hero() {
             {/* Trust Badge */}
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand-light text-brand-dark font-semibold text-xs md:text-sm tracking-wide shadow-sm uppercase border border-brand-soft/20">
               <span className="w-2 h-2 rounded-full bg-cta" />
-              Personalized Homeopathic Treatment Since 1999
+              Narayan Homoeopathic Chikitsalaya Since 1984
             </div>
 
             {/* Main Headline */}
             <h1 className="font-heading font-bold text-4xl md:text-5xl lg:text-6xl text-brand-dark leading-[1.1] tracking-tight">
-              Personalized Homeopathic Care for{" "}
+              Narayan Homoeopathic Chikitsalaya Care for{" "}
               <span className="bg-gradient-to-r from-brand-secondary via-brand-primary to-cta bg-clip-text text-transparent animate-text-gradient">
                 Lasting Health & Wellness
               </span>
