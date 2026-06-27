@@ -170,16 +170,29 @@ export default function AboutPage() {
                 </div>
               </div>
 
-              <div className="lg:col-span-6 flex justify-center relative lg:pt-20">
+              <div className="lg:col-span-6 flex flex-col items-center relative lg:pt-20">
                 <div className="relative w-full max-w-[480px] rounded-3xl overflow-hidden border-4 border-white shadow-xl bg-slate-100">
                   <Image
-                    src="/ayush-conference.jpg"
-                    alt="Dr. Navneet Sharma and Dr. Asha Sharma at the 3rd International Ayush Conference & Exhibition 2026"
+                    src="/founder-manohar-lal-sharma.jpg"
+                    alt="Hon. Magistrate (Late) Shree Pandit Manohar Lal Sharma - Founder of Narayan Homoeopathic Chikitsalaya"
                     width={978}
                     height={1024}
                     priority
                     className="w-full h-auto object-contain"
                   />
+                </div>
+
+                {/* Founder Name Caption */}
+                <div className="mt-5 text-center space-y-1.5">
+                  <div className="flex items-center justify-center gap-3">
+                    <span className="h-px w-8 bg-gradient-to-r from-transparent to-brand-secondary/60" />
+                    <span className="text-[10px] font-bold text-brand-secondary tracking-[0.25em] uppercase">Founder</span>
+                    <span className="h-px w-8 bg-gradient-to-l from-transparent to-brand-secondary/60" />
+                  </div>
+                  <h3 className="font-heading font-bold text-xl md:text-2xl text-brand-dark tracking-tight">
+                    Late Pt. Manohar Lal Sharma Ji
+                  </h3>
+
                 </div>
               </div>
 
@@ -294,6 +307,7 @@ export default function AboutPage() {
                   <div className="space-y-1">
                     <h3 className="font-heading font-bold text-xl md:text-2xl text-brand-dark">Dr. Navneet Sharma</h3>
                     <p className="text-xs font-bold text-brand-secondary uppercase tracking-wider">D.H.M.S</p>
+                    <p className="text-xs font-bold text-brand-secondary uppercase tracking-wider">Reg. No. : H-0104(U.K.H.M.B)</p>
                   </div>
                   <p className="text-sm text-text-body/80 leading-relaxed">
                     At Narayan Homoeopathic Chikitsalaya, we are dedicated to helping patients achieve better health through personalized homeopathic care. With years of medical expertise and a patient-first approach, our experienced team strives to deliver effective and compassionate treatment. To provide comprehensive healthcare services, we also offer a range of reliable pathological and diagnostic tests through our fully equipped pathology laboratory, ensuring quality care under one roof.
@@ -315,6 +329,7 @@ export default function AboutPage() {
                   <div className="space-y-1">
                     <h3 className="font-heading font-bold text-xl md:text-2xl text-brand-dark">Dr. Asha Sharma</h3>
                     <p className="text-xs font-bold text-brand-secondary uppercase tracking-wider">D.H.M.S</p>
+                    <p className="text-xs font-bold text-brand-secondary uppercase tracking-wider">Reg. No. : H-0105(U.K.H.M.B)</p>
                   </div>
                   <p className="text-sm text-text-body/80 leading-relaxed">
                     Narayan Homoeopathic Chikitsalaya is committed to providing holistic healthcare solutions tailored to your individual needs. Backed by experienced professionals and advanced diagnostic facilities, we focus on delivering trusted homeopathic treatments and accurate pathology services. Our mission is to support your journey toward improved health, well-being, and a better quality of life.

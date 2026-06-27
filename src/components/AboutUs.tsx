@@ -7,7 +7,7 @@ import ScrollReveal from "./ScrollReveal";
 export default function AboutUs() {
   return (
     <section id="about" className="py-16 md:py-24 bg-slate-50 relative overflow-hidden">
-      
+
       {/* Background accents */}
       <div className="absolute inset-0 pointer-events-none z-0 opacity-40">
         <div className="absolute top-[10%] left-[5%] w-72 h-72 rounded-full bg-brand-light/40 blur-3xl" />
@@ -15,10 +15,10 @@ export default function AboutUs() {
 
       <div className="max-w-7xl mx-auto px-4 md:px-8 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
-          
+
           {/* Left Column: Rich Content & Feature Cards */}
           <ScrollReveal direction="left" className="lg:col-span-7 flex flex-col space-y-6 md:space-y-8">
-            
+
             {/* Header copy */}
             <div className="space-y-4">
               <span className="text-xs font-bold text-brand-secondary tracking-widest uppercase block">
@@ -34,7 +34,7 @@ export default function AboutUs() {
 
             {/* Feature Cards Stack */}
             <div className="space-y-6">
-              
+
               {/* Card 1: Friendly Clinic */}
               <div className="flex gap-4 md:gap-5 p-4 md:p-5 rounded-2xl bg-white border border-slate-100/80 shadow-sm transition-all duration-300 hover:shadow-md hover:scale-[1.01] group">
                 <div className="p-3 bg-brand-light/50 text-brand-primary rounded-xl shrink-0 h-fit transition-transform duration-300 group-hover:scale-110">
@@ -45,7 +45,7 @@ export default function AboutUs() {
                     Friendly Clinic Near You
                   </h3>
                   <p className="text-xs md:text-sm text-text-body/80 leading-relaxed">
-                    Narayan Homoeopathic Chikitsalaya periodically organizes general routine medical camps in all north india since 1999.
+                    Narayan Homoeopathic Chikitsalaya periodically organizes general routine medical camps in all north india since 1984.
                   </p>
                 </div>
               </div>
@@ -83,7 +83,7 @@ export default function AboutUs() {
           {/* Right Column: Visual Frame featuring sign board image */}
           <ScrollReveal direction="right" className="lg:col-span-5 flex justify-center">
             <div className="relative group w-full max-w-[340px] md:max-w-[380px] aspect-[9/16] rounded-3xl overflow-hidden shadow-2xl border-4 border-white transition-all duration-500 hover:-translate-y-2 hover:rotate-1 bg-slate-100">
-              
+
               {/* Abstract decorative frame shadow element */}
               <div className="absolute inset-0 z-0 bg-gradient-to-t from-brand-dark/20 via-transparent to-transparent opacity-80 pointer-events-none" />
 
