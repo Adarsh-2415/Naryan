@@ -98,7 +98,7 @@ export default function Hero() {
 
             {/* Supporting Description */}
             <p className="text-base md:text-lg text-text-body/90 max-w-xl leading-relaxed">
-              Experience safe, gentle, and highly effective homeopathy treatments tailored specifically to your body's unique ecosystem. We focus on diagnosing and addressing root causes to foster long-term recovery.
+              Experience safe, gentle, and highly effective homeopathy treatments tailored specifically to your body&apos;s unique ecosystem. We focus on diagnosing and addressing root causes to foster long-term recovery.
             </p>
 
             {/* CTA Buttons (Option B) */}

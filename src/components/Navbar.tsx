@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { Menu, X, ChevronDown } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -32,7 +33,7 @@ export default function Navbar() {
     >
       <div className="max-w-7xl mx-auto px-4 md:px-8 flex justify-between items-center w-full">
         {/* Logo Section - Visible only on mobile/tablet when BrandingSection is hidden or menu is compact */}
-        <a href="#" className="flex items-center gap-3 shrink-0 lg:hidden">
+        <Link href="/" className="flex items-center gap-3 shrink-0 lg:hidden">
           <div className="relative h-10 w-28 shrink-0">
             <Image
               src="/logo.jpg"
@@ -45,15 +46,15 @@ export default function Navbar() {
           <span className="font-heading font-bold text-[10px] min-[390px]:text-xs sm:text-sm text-brand-dark leading-tight tracking-tight border-l border-slate-200 pl-2 sm:pl-3">
             Narayan Homoeopathic <br className="sm:hidden" /> Chikitsalaya
           </span>
-        </a>
+        </Link>
 
         {/* Desktop Navigation Link System - Centered and constrained to align with Logo/Title above */}
         <div className="hidden lg:flex items-center justify-between w-full max-w-[950px] mx-auto">
           <nav className="flex items-center gap-6 xl:gap-8 font-medium text-xs xl:text-sm">
-            <a href="/" className="text-brand-dark hover:text-brand-secondary transition-colors whitespace-nowrap">Home</a>
-            <a href="/about" className="text-brand-dark/80 hover:text-brand-secondary transition-colors whitespace-nowrap">About Us</a>
-            <a href="/treatments" className="text-brand-dark/80 hover:text-brand-secondary transition-colors whitespace-nowrap">Our Treatments</a>
-            <a href="/gallery" className="text-brand-dark/80 hover:text-brand-secondary transition-colors whitespace-nowrap">Gallery</a>
+            <Link href="/" className="text-brand-dark hover:text-brand-secondary transition-colors whitespace-nowrap">Home</Link>
+            <Link href="/about" className="text-brand-dark/80 hover:text-brand-secondary transition-colors whitespace-nowrap">About Us</Link>
+            <Link href="/treatments" className="text-brand-dark/80 hover:text-brand-secondary transition-colors whitespace-nowrap">Our Treatments</Link>
+            <Link href="/gallery" className="text-brand-dark/80 hover:text-brand-secondary transition-colors whitespace-nowrap">Gallery</Link>
 
             {/* Blog Dropdown */}
             <div className="relative" onMouseEnter={() => setIsDropdownOpen(true)} onMouseLeave={() => setIsDropdownOpen(false)}>
@@ -63,27 +64,27 @@ export default function Navbar() {
               </button>
               {isDropdownOpen && (
                 <div className="absolute left-0 mt-0 w-48 rounded-xl bg-white shadow-xl border border-slate-100 py-2 z-50 animate-in fade-in slide-in-from-top-2 duration-200">
-                  <a href="/awards" className="block px-4 py-2.5 text-sm text-brand-dark/80 hover:bg-slate-50 hover:text-brand-secondary transition-colors whitespace-nowrap">Awards</a>
-                  <a href="/case-studies" className="block px-4 py-2.5 text-sm text-brand-dark/80 hover:bg-slate-50 hover:text-brand-secondary transition-colors whitespace-nowrap">Case Studies</a>
-                  <a href="/seminars" className="block px-4 py-2.5 text-sm text-brand-dark/80 hover:bg-slate-50 hover:text-brand-secondary transition-colors whitespace-nowrap">Seminars</a>
+                  <Link href="/awards" className="block px-4 py-2.5 text-sm text-brand-dark/80 hover:bg-slate-50 hover:text-brand-secondary transition-colors whitespace-nowrap">Awards</Link>
+                  <Link href="/case-studies" className="block px-4 py-2.5 text-sm text-brand-dark/80 hover:bg-slate-50 hover:text-brand-secondary transition-colors whitespace-nowrap">Case Studies</Link>
+                  <Link href="/seminars" className="block px-4 py-2.5 text-sm text-brand-dark/80 hover:bg-slate-50 hover:text-brand-secondary transition-colors whitespace-nowrap">Seminars</Link>
                 </div>
               )}
             </div>
 
-            <a href="/#contact" className="text-brand-dark/80 hover:text-brand-secondary transition-colors whitespace-nowrap">Contact Us</a>
+            <Link href="/#contact" className="text-brand-dark/80 hover:text-brand-secondary transition-colors whitespace-nowrap">Contact Us</Link>
           </nav>
 
           {/* Desktop CTA */}
-          <a href="/booking" className="bg-cta hover:bg-cta-hover text-white font-semibold text-sm px-6 py-2.5 rounded-full transition-all duration-200 shadow-md shadow-cta/20 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-cta/50">
+          <Link href="/booking" className="bg-cta hover:bg-cta-hover text-white font-semibold text-sm px-6 py-2.5 rounded-full transition-all duration-200 shadow-md shadow-cta/20 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-cta/50">
             Book Appointment
-          </a>
+          </Link>
         </div>
 
         {/* Mobile CTA and Toggle (Visible only on smaller screens) */}
         <div className="flex lg:hidden items-center gap-4 ml-auto">
-          <a href="/booking" className="hidden sm:inline-flex bg-cta hover:bg-cta-hover text-white font-semibold text-sm px-6 py-2.5 rounded-full transition-all duration-200 shadow-md shadow-cta/20 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-cta/50">
+          <Link href="/booking" className="hidden sm:inline-flex bg-cta hover:bg-cta-hover text-white font-semibold text-sm px-6 py-2.5 rounded-full transition-all duration-200 shadow-md shadow-cta/20 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-cta/50">
             Book
-          </a>
+          </Link>
           <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="text-brand-dark p-2 hover:bg-slate-100 rounded-lg focus:outline-none" aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}>
             {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
@@ -93,78 +94,78 @@ export default function Navbar() {
       {/* Mobile Drawer Navigation */}
       {isMobileMenuOpen && (
         <div className="lg:hidden bg-white border-t border-slate-100 py-4 px-6 flex flex-col gap-4 animate-in slide-in-from-top-4 duration-300">
-          <a
+          <Link
             href="/"
             onClick={() => setIsMobileMenuOpen(false)}
             className="font-medium text-brand-dark hover:text-brand-secondary py-2 border-b border-slate-50"
           >
             Home
-          </a>
-          <a
+          </Link>
+          <Link
             href="/about"
             onClick={() => setIsMobileMenuOpen(false)}
             className="font-medium text-brand-dark/85 hover:text-brand-secondary py-2 border-b border-slate-50"
           >
             About Us
-          </a>
-          <a
+          </Link>
+          <Link
             href="/treatments"
             onClick={() => setIsMobileMenuOpen(false)}
             className="font-medium text-brand-dark/85 hover:text-brand-secondary py-2 border-b border-slate-50"
           >
             Our Treatments
-          </a>
-          <a
+          </Link>
+          <Link
             href="/gallery"
             onClick={() => setIsMobileMenuOpen(false)}
             className="font-medium text-brand-dark/85 hover:text-brand-secondary py-2 border-b border-slate-50"
           >
             Gallery
-          </a>
+          </Link>
 
           {/* Blog subgroup */}
           <div className="flex flex-col gap-2 pl-4 py-2 border-l-2 border-brand-light">
             <span className="text-xs font-bold text-brand-dark/50 uppercase tracking-wider">
               Blog
             </span>
-            <a
+            <Link
               href="/awards"
               onClick={() => setIsMobileMenuOpen(false)}
               className="text-sm font-medium text-brand-dark/80 hover:text-brand-secondary py-1"
             >
               Awards
-            </a>
-            <a
+            </Link>
+            <Link
               href="/case-studies"
               onClick={() => setIsMobileMenuOpen(false)}
               className="text-sm font-medium text-brand-dark/80 hover:text-brand-secondary py-1"
             >
               Case Studies
-            </a>
-            <a
+            </Link>
+            <Link
               href="/seminars"
               onClick={() => setIsMobileMenuOpen(false)}
               className="text-sm font-medium text-brand-dark/80 hover:text-brand-secondary py-1"
             >
               Seminars
-            </a>
+            </Link>
           </div>
 
-          <a
+          <Link
             href="/#contact"
             onClick={() => setIsMobileMenuOpen(false)}
             className="font-medium text-brand-dark/85 hover:text-brand-secondary py-2 border-b border-slate-50"
           >
             Contact Us
-          </a>
+          </Link>
 
-          <a
+          <Link
             href="/booking"
             onClick={() => setIsMobileMenuOpen(false)}
             className="bg-cta hover:bg-cta-hover text-white text-center font-semibold py-3 rounded-xl transition-all duration-200 mt-2"
           >
             Book Appointment
-          </a>
+          </Link>
         </div>
       )}
     </header>

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 import { sendPatientConfirmation } from "@/lib/email/sendPatientConfirmation";
 import { sendDoctorNotification } from "@/lib/email/sendDoctorNotification";
+import { BASE_SLOTS } from "@/lib/bookingConfig";
 
 export async function POST(req: Request) {
   if (!supabase) {
@@ -16,6 +17,10 @@ export async function POST(req: Request) {
     
     if (!fullName || !email || !phone || !address || !date || !time) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+    }
+
+    if (!BASE_SLOTS.includes(time)) {
+      return NextResponse.json({ error: "Invalid appointment slot selected" }, { status: 400 });
     }
     
     // 2. Validate against past dates
@@ -64,33 +69,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "This slot is already booked. Please select another time." }, { status: 409 });
     }
     
-    // 5. Database Insertion
-    const { data: insertedData, error: insertError } = await supabase
-      .from("appointments")
-      .insert({
-        full_name: fullName,
-        email: email,
-        phone: phone,
-        address: address,
-        age: age ? parseInt(age) : null,
-        gender: gender || null,
-        reason: reason || null,
-        appointment_date: date,
-        appointment_time: time,
-        status: "confirmed"
-      })
-      .select("id")
-      .single();
-      
-    if (insertError || !insertedData) {
-      console.error("Database insert error:", insertError);
-      return NextResponse.json({ 
-        error: `Supabase Error: ${insertError?.message || "Failed to save booking"}` 
-      }, { status: 500 });
-    }
-    
-    // Generated Appointment ID using prefix or DB UUID. The UI expects an ID like NHC-YYYY-XXXX.
-    // For simplicity, we generate one to return to the UI and put in the email, since UI generates it randomly if not returned.
+    // 5. Generate Appointment ID using prefix or DB UUID. The UI expects an ID like NHC-YYYY-XXXX.
     const year = new Date().getFullYear();
     const randomSeq = Math.floor(1000 + Math.random() * 9000);
     const appointmentId = `NHC-${year}-${randomSeq}`;
@@ -109,10 +88,65 @@ export async function POST(req: Request) {
     };
     
     // 6. Dispatch Emails concurrently
-    await Promise.allSettled([
+    const emailResults = await Promise.allSettled([
       sendPatientConfirmation(bookingData),
       sendDoctorNotification(bookingData)
     ]);
+    
+    // Check if at least the patient confirmation was sent successfully
+    const patientMailResult = emailResults[0];
+    const isPatientSent = patientMailResult.status === 'fulfilled' && patientMailResult.value.success;
+    
+    // 7. Database Insertion with final email status values
+    const { data: insertedData, error: insertError } = await supabase
+      .from("appointments")
+      .insert({
+        full_name: fullName,
+        email: email,
+        phone: phone,
+        address: address,
+        age: age ? parseInt(age) : null,
+        gender: gender || null,
+        reason: reason || null,
+        appointment_date: date,
+        appointment_time: time,
+        status: "confirmed",
+        email_status: isPatientSent ? "sent" : "failed",
+        email_sent_at: isPatientSent ? new Date().toISOString() : null
+      })
+      .select("id")
+      .single();
+      
+    if (insertError || !insertedData) {
+      console.error("Database insert error:", insertError);
+      return NextResponse.json({ 
+        error: `Supabase Error: ${insertError?.message || "Failed to save booking"}` 
+      }, { status: 500 });
+    }
+
+    // 8. Upsert patient record targeting unique email address
+    const { error: upsertError } = await supabase
+      .from("patient_records")
+      .upsert(
+        {
+          full_name: fullName,
+          email: email,
+          phone: phone,
+          address: address,
+          age: age ? parseInt(age) : null,
+          gender: gender || null,
+          booking_reference: appointmentId,
+          appointment_booked_on: new Date().toISOString(),
+          appointment_date: date,
+          appointment_time: time,
+          updated_at: new Date().toISOString()
+        },
+        { onConflict: "email" }
+      );
+
+    if (upsertError) {
+      console.error("Patient record upsert warning (non-blocking):", upsertError);
+    }
     
     return NextResponse.json({ success: true, appointmentId });
     

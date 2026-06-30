@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import TopBar from "@/components/TopBar";
 import BrandingSection from "@/components/BrandingSection";
 import Navbar from "@/components/Navbar";
@@ -9,21 +9,31 @@ import Image from "next/image";
 import ScrollReveal from "@/components/ScrollReveal";
 import { Award, Calendar, ArrowRight } from "lucide-react";
 
-// Mock awards data conforming to future Sanity CMS schema
-// To test active grid, populate this array with items
-const mockAwards: any[] = [
-  /*
-  {
-    id: "1",
-    title: "Corona Warrior Award",
-    image: "/doctor-4.jpg",
-    createdDate: "2020",
-    displayOrder: 1
-  }
-  */
-];
+// Fallback awards list
+const fallbackAwards: any[] = [];
 
 export default function AwardsPage() {
+  const [items, setItems] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch("/api/admin/pages/awards?published=true")
+      .then(res => res.json())
+      .then(data => {
+        if (data?.success && data?.items?.length > 0) {
+          setItems(data.items);
+        } else {
+          setItems(fallbackAwards);
+        }
+      })
+      .catch(() => {
+        setItems(fallbackAwards);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, []);
+
   return (
     <>
       <TopBar />
@@ -82,7 +92,13 @@ export default function AwardsPage() {
         <section className="py-20 md:py-24">
           <div className="max-w-7xl mx-auto px-4 md:px-8">
             
-            {mockAwards.length === 0 ? (
+            {loading ? (
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                {[...Array(3)].map((_, i) => (
+                  <div key={i} className="aspect-[4/3] w-full bg-slate-200 animate-pulse rounded-3xl" />
+                ))}
+              </div>
+            ) : items.length === 0 ? (
               /* PREMIUM EMPTY STATE */
               <ScrollReveal direction="up" className="max-w-md mx-auto text-center bg-white border border-slate-100 p-12 rounded-[2.5rem] shadow-xl space-y-6 relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-24 h-24 rounded-full bg-brand-light/20 blur-2xl" />
@@ -111,9 +127,9 @@ export default function AwardsPage() {
             ) : (
               /* ACTIVE AWARDS GRID */
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {mockAwards.map((item, idx) => (
+                {items.map((item, idx) => (
                   <ScrollReveal
-                    key={item.id}
+                    key={item.id || idx}
                     direction="up"
                     delay={idx * 150}
                     className="flex"
@@ -121,7 +137,7 @@ export default function AwardsPage() {
                     <div className="group bg-white rounded-3xl border border-slate-100 overflow-hidden shadow-sm hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-500 flex flex-col w-full relative">
                       <div className="aspect-[4/3] w-full overflow-hidden relative bg-slate-100 shrink-0">
                         <Image
-                          src={item.image}
+                          src={item.image_url}
                           alt={item.title || "Award Certification"}
                           fill
                           sizes="(max-w-768px) 100vw, 33vw"
@@ -134,11 +150,9 @@ export default function AwardsPage() {
                           <h3 className="font-heading font-bold text-base md:text-lg text-brand-dark leading-snug">
                             {item.title}
                           </h3>
-                          {item.createdDate && (
-                            <div className="pt-4 border-t border-slate-50 flex items-center gap-1.5 text-xs text-text-body/70 font-semibold mt-4">
-                              <Calendar size={13} className="text-[#018ABE]" /> {item.createdDate}
-                            </div>
-                          )}
+                          <div className="pt-4 border-t border-slate-50 flex items-center gap-1.5 text-xs text-text-body/70 font-semibold mt-4">
+                            <Calendar size={13} className="text-[#018ABE]" /> {item.created_at ? new Date(item.created_at).getFullYear().toString() : "2026"}
+                          </div>
                         </div>
                       )}
                     </div>

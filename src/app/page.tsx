@@ -12,6 +12,11 @@ import Treatments from "@/components/Treatments";
 import ContactUs from "@/components/ContactUs";
 import Footer from "@/components/Footer";
 
+export const metadata = {
+  title: "Narayan Homoeopathic Chikitsalaya - Best Homeopathy Clinic in Roorkee",
+  description: "Experience holistic healing and premium diagnostic care in Roorkee. Book online homeopathic doctor consultations for chronic diseases, oncology support, & pediatric treatments.",
+};
+
 export default function Home() {
   return (
     <>

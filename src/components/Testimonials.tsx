@@ -108,7 +108,7 @@ export default function Testimonials() {
 
                       {/* Review text */}
                       <p className="text-xs md:text-sm text-text-body/90 leading-relaxed italic mb-6">
-                        "{item.text}"
+                        &ldquo;{item.text}&rdquo;
                       </p>
                     </div>
 

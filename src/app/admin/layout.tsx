@@ -9,7 +9,12 @@ import {
   LogOut, 
   Menu, 
   X, 
-  Loader2
+  Loader2,
+  Calendar,
+  FileText,
+  Lock,
+  Clock,
+  MessageSquare
 } from "lucide-react";
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -80,6 +85,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   const menuItems = [
     { name: "Overview", href: "/admin", icon: Home },
+    { name: "Appointments", href: "/admin/appointments", icon: Calendar },
+    { name: "Availability", href: "/admin/availability", icon: Clock },
+    { name: "Contact Queries", href: "/admin/queries", icon: MessageSquare },
+    { name: "Manage Pages", href: "/admin/pages", icon: FileText },
+    { name: "Change Password", href: "/admin/change-password", icon: Lock }
   ];
 
   return (

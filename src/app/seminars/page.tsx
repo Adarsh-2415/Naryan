@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import TopBar from "@/components/TopBar";
 import BrandingSection from "@/components/BrandingSection";
 import Navbar from "@/components/Navbar";
@@ -8,25 +9,39 @@ import Image from "next/image";
 import ScrollReveal from "@/components/ScrollReveal";
 import { Calendar, MapPin, ArrowRight } from "lucide-react";
 
-// Mock seminars data conforming to the future Sanity CMS schema
-// The UI is designed to gracefully handle:
-// 1. Image only
-// 2. Image + Title
-// 3. Image + Title + Description
-const mockSeminars: any[] = [
-  /*
-  {
-    id: "1",
-    image: "/gallery-banner.png",
-    title: "International Homeopathy Convention 2026",
-    shortDescription: "A keynote session discussing constitutional therapeutics and medical advancements in clinical oncology care pathways.",
-    date: "Feb 15, 2026",
-    displayOrder: 1
-  }
-  */
-];
+interface Seminar {
+  id: string;
+  image_url: string;
+  title: string;
+  short_description: string;
+  created_at?: string;
+  display_order: number;
+}
+
+const fallbackSeminars: Seminar[] = [];
 
 export default function SeminarsPage() {
+  const [items, setItems] = useState<Seminar[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch("/api/admin/pages/seminars?published=true")
+      .then(res => res.json())
+      .then(data => {
+        if (data?.success && data?.items?.length > 0) {
+          setItems(data.items);
+        } else {
+          setItems(fallbackSeminars);
+        }
+      })
+      .catch(() => {
+        setItems(fallbackSeminars);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, []);
+
   return (
     <>
       <TopBar />
@@ -85,7 +100,13 @@ export default function SeminarsPage() {
         <section className="py-20 md:py-24">
           <div className="max-w-7xl mx-auto px-4 md:px-8">
             
-            {mockSeminars.length === 0 ? (
+            {loading ? (
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                {[...Array(3)].map((_, i) => (
+                  <div key={i} className="aspect-[16/10] w-full bg-slate-200 animate-pulse rounded-3xl" />
+                ))}
+              </div>
+            ) : items.length === 0 ? (
               /* PREMIUM EMPTY STATE */
               <ScrollReveal direction="up" className="max-w-md mx-auto text-center bg-white border border-slate-100 p-12 rounded-[2.5rem] shadow-xl space-y-6 relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-24 h-24 rounded-full bg-brand-light/20 blur-2xl" />
@@ -114,9 +135,9 @@ export default function SeminarsPage() {
             ) : (
               /* ACTIVE SEMINARS GRID */
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {mockSeminars.map((item, idx) => (
+                {items.map((item, idx) => (
                   <ScrollReveal
-                    key={item.id}
+                    key={item.id || idx}
                     direction="up"
                     delay={idx * 150}
                     className="flex"
@@ -126,7 +147,7 @@ export default function SeminarsPage() {
                       {/* Image Frame */}
                       <div className="aspect-[16/10] w-full overflow-hidden relative bg-slate-100 shrink-0">
                         <Image
-                          src={item.image}
+                          src={item.image_url}
                           alt={item.title || "Seminar Image"}
                           fill
                           sizes="(max-w-768px) 100vw, 33vw"
@@ -135,7 +156,7 @@ export default function SeminarsPage() {
                       </div>
                       
                       {/* Content block with adaptable layouts */}
-                      {(item.title || item.shortDescription) && (
+                      {(item.title || item.short_description) && (
                         <div className="p-6 md:p-8 flex-grow flex flex-col justify-between space-y-4">
                           <div className="space-y-2">
                             {item.title && (
@@ -143,18 +164,16 @@ export default function SeminarsPage() {
                                 {item.title}
                               </h3>
                             )}
-                            {item.shortDescription && (
+                            {item.short_description && (
                               <p className="text-xs text-text-body/80 leading-relaxed">
-                                {item.shortDescription}
+                                {item.short_description}
                               </p>
                             )}
                           </div>
                           
-                          {item.date && (
-                            <div className="pt-4 border-t border-slate-50 flex items-center gap-1.5 text-xs text-[#018ABE] font-semibold mt-4">
-                              <Calendar size={13} /> {item.date}
-                            </div>
-                          )}
+                          <div className="pt-4 border-t border-slate-50 flex items-center gap-1.5 text-xs text-[#018ABE] font-semibold mt-4">
+                            <Calendar size={13} /> {item.created_at ? new Date(item.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) : "Feb 15, 2026"}
+                          </div>
                         </div>
                       )}
                     </div>

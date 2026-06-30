@@ -1,9 +1,12 @@
 "use client";
 
 import Image from "next/image";
-import { Phone, Mail, MapPin, ExternalLink } from "lucide-react";
+import { Phone, Mail, MapPin } from "lucide-react";
+import { useGlobalSettings } from "@/hooks/useGlobalSettings";
 
 export default function Footer() {
+  const { settings } = useGlobalSettings();
+
   return (
     <footer className="bg-brand-dark text-white/70 text-sm border-t border-white/5 relative overflow-hidden">
       
@@ -21,14 +24,14 @@ export default function Footer() {
               <div className="relative h-12 w-40 bg-white p-1 rounded-xl border border-white/10 shrink-0">
                 <Image
                   src="/logo.jpg"
-                  alt="Narayan Homoeopathic Chikitsalaya Logo"
+                  alt={`${settings.clinic_name} Logo`}
                   fill
                   priority
                   className="object-contain object-left rounded-lg"
                 />
               </div>
               <h3 className="font-heading font-bold text-sm text-white leading-tight pt-1">
-                Narayan Homoeopathic Chikitsalaya
+                {settings.clinic_name}
               </h3>
             </div>
             
@@ -47,21 +50,21 @@ export default function Footer() {
               <li className="flex items-start gap-3">
                 <MapPin size={16} className="text-brand-secondary shrink-0 mt-0.5" />
                 <span className="leading-relaxed">
-                  First street, Neelam cinema crossing 32, Jamun Road, Civil Lines, Roorkee, Uttarakhand 247667
+                  {settings.address}
                 </span>
               </li>
               
               <li className="flex items-center gap-3">
                 <Phone size={16} className="text-brand-secondary shrink-0" />
-                <a href="tel:+911332270021" className="hover:text-white transition-colors">
-                  +91-1332 270021
+                <a href={`tel:${settings.phone.replace(/[^+\d]/g, "")}`} className="hover:text-white transition-colors">
+                  {settings.phone}
                 </a>
               </li>
 
               <li className="flex items-center gap-3">
                 <Mail size={16} className="text-brand-secondary shrink-0" />
-                <a href="mailto:homoeopathy4u@gmail.com" className="hover:text-white transition-colors">
-                  homoeopathy4u@gmail.com
+                <a href={`mailto:${settings.email}`} className="hover:text-white transition-colors">
+                  {settings.email}
                 </a>
               </li>
             </ul>

@@ -2,10 +2,13 @@
 
 import { Phone, ShieldCheck, Sparkles, Clock, ChevronRight } from "lucide-react";
 import ScrollReveal from "./ScrollReveal";
+import { useGlobalSettings } from "@/hooks/useGlobalSettings";
 
 export default function QuickBooking() {
+  const { settings } = useGlobalSettings();
+
   const handleDial = () => {
-    window.location.href = "tel:+911332270021";
+    window.location.href = `tel:${settings.phone.replace(/[^+\d]/g, "")}`;
   };
 
   return (
@@ -36,7 +39,7 @@ export default function QuickBooking() {
                 New Patient can book appointment
               </h2>
               <p className="text-text-body/80 text-sm md:text-base leading-relaxed">
-                Patients can book an appointment at Narayan Homoeopathic Chikitsalaya by calling the clinic, visiting the website, or booking online. Our staff will assist with scheduling at your convenience.
+                Patients can book an appointment at {settings.clinic_name} by calling the clinic, visiting the website, or booking online. Our staff will assist with scheduling at your convenience.
               </p>
             </ScrollReveal>
 
@@ -45,11 +48,11 @@ export default function QuickBooking() {
                 Need Assistance?
               </span>
               <a
-                href="tel:+911332270021"
+                href={`tel:${settings.phone.replace(/[^+\d]/g, "")}`}
                 className="inline-flex items-center gap-3 text-2xl md:text-3xl font-bold font-heading text-brand-secondary hover:text-brand-primary transition-colors mt-2"
               >
                 <Phone size={24} className="animate-pulse text-emerald-500" />
-                <span>+91-1332 270021</span>
+                <span>{settings.phone}</span>
               </a>
             </ScrollReveal>
           </div>
