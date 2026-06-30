@@ -25,10 +25,13 @@ export default function BrandingSection() {
         <div className="h-12 w-px bg-slate-200 shrink-0 hidden md:block" />
 
         {/* Prominent Clinic Title */}
-        <div className="hidden md:block">
-          <h1 className="font-heading font-bold text-xl md:text-2xl lg:text-3xl text-brand-dark leading-none tracking-tight text-center md:text-left">
+        <div className="hidden md:block space-y-1.5">
+          <h1 className="font-heading font-bold text-2xl md:text-3xl lg:text-4xl text-blue-600 leading-none tracking-tight text-center md:text-left">
             नारायण होम्योपैथिक चिकित्सालय
           </h1>
+          <div className="font-heading font-bold text-lg md:text-xl lg:text-2xl text-red-600 leading-none tracking-tight text-center md:text-left">
+            Narayan Homoeopathic Chikitsalaya
+          </div>
         </div>
 
       </div>

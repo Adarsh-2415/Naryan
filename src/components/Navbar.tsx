@@ -43,9 +43,14 @@ export default function Navbar() {
               className="object-contain object-left"
             />
           </div>
-          <span className="font-heading font-bold text-[10px] min-[390px]:text-xs sm:text-sm text-brand-dark leading-tight tracking-tight border-l border-slate-200 pl-2 sm:pl-3">
-            Narayan Homoeopathic <br className="sm:hidden" /> Chikitsalaya
-          </span>
+          <div className="flex flex-col border-l border-slate-200 pl-2 sm:pl-3">
+            <span className="font-heading font-bold text-[10px] min-[390px]:text-[11px] sm:text-xs text-blue-600 leading-tight">
+              नारायण होम्योपैथिक चिकित्सालय
+            </span>
+            <span className="font-heading font-bold text-[8px] min-[390px]:text-[9px] sm:text-[10px] text-red-600 leading-tight mt-0.5">
+              Narayan Homoeopathic Chikitsalaya
+            </span>
+          </div>
         </Link>
 
         {/* Desktop Navigation Link System - Centered and constrained to align with Logo/Title above */}
