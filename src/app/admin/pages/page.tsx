@@ -32,8 +32,9 @@ import Navbar from "@/components/Navbar";
 import { supabase } from "@/lib/supabase";
 
 export default function ManagePagesPortal() {
-  const [activeTab, setActiveTab] = useState<"gallery" | "awards" | "case-studies" | "seminars" | "treatments" | "global-settings">("gallery");
+  const [activeTab, setActiveTab] = useState<"gallery" | "awards" | "case-studies" | "seminars" | "treatments" | "testimonials" | "global-settings">("gallery");
   const [items, setItems] = useState<any[]>([]);
+  const [searchQuery, setSearchQuery] = useState("");
   const [settings, setSettings] = useState<any>({
     clinic_name: "",
     phone: "",
@@ -109,6 +110,7 @@ export default function ManagePagesPortal() {
 
   // Load content whenever tab changes
   useEffect(() => {
+    setSearchQuery("");
     loadData();
   }, [loadData]);
 
@@ -297,7 +299,10 @@ export default function ManagePagesPortal() {
 
   // Delete Item
   const handleDelete = async (id: string) => {
-    if (!confirm("Are you sure you want to permanently delete this item? This will also remove the image file from storage.")) return;
+    const confirmMsg = activeTab === "testimonials"
+      ? "Delete Testimonial?\n\nThis action cannot be undone."
+      : "Are you sure you want to permanently delete this item? This will also remove the image file from storage.";
+    if (!confirm(confirmMsg)) return;
     setSaving(true);
     try {
       const res = await authFetch(`/api/admin/pages/${activeTab}?id=${id}`, {
@@ -387,9 +392,15 @@ export default function ManagePagesPortal() {
   const startEdit = (item: any) => {
     setEditingId(item.id);
     setFormState(item);
-    setUploadedImage({ url: item.image_url || item.cover_image_url, path: item.storage_path || item.cover_image_storage_path });
-    if (item.before_image_url) setUploadedBeforeImage({ url: item.before_image_url, path: item.before_image_storage_path });
-    if (item.after_image_url) setUploadedAfterImage({ url: item.after_image_url, path: item.after_image_storage_path });
+    if (activeTab !== "testimonials") {
+      setUploadedImage({ url: item.image_url || item.cover_image_url, path: item.storage_path || item.cover_image_storage_path });
+      if (item.before_image_url) setUploadedBeforeImage({ url: item.before_image_url, path: item.before_image_storage_path });
+      if (item.after_image_url) setUploadedAfterImage({ url: item.after_image_url, path: item.after_image_storage_path });
+    } else {
+      setUploadedImage(null);
+      setUploadedBeforeImage(null);
+      setUploadedAfterImage(null);
+    }
   };
 
   // Form input helper
@@ -404,6 +415,7 @@ export default function ManagePagesPortal() {
     { id: "case-studies", name: "Case Studies", icon: BookOpen },
     { id: "seminars", name: "Seminars", icon: Calendar },
     { id: "treatments", name: "Treatments", icon: Activity },
+    { id: "testimonials", name: "Testimonials", icon: LucideIcons.MessageSquare },
     { id: "global-settings", name: "Global Settings", icon: Settings }
   ] as const;
 
@@ -554,32 +566,34 @@ export default function ManagePagesPortal() {
 
             <div className="space-y-4">
               {/* IMAGE UPLOAD ELEMENT */}
-              <div className="space-y-1.5">
-                <label className="text-xs font-bold text-slate-500 uppercase">
-                  {activeTab === "case-studies" ? "Cover Image" : "Image File"}
-                </label>
-                {uploadedImage ? (
-                  <div className="relative aspect-video w-full rounded-xl overflow-hidden border border-slate-100 group">
-                    <img src={uploadedImage.url} className="object-cover w-full h-full" alt="Preview" />
-                    <button
-                      onClick={() => { setUploadedImage(null); handleFormChange("image_url", ""); }}
-                      className="absolute top-2 right-2 p-1.5 bg-red-600 text-white rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"
-                    >
-                      <Trash2 size={14} />
-                    </button>
-                  </div>
-                ) : (
-                  <label className="border-2 border-dashed border-slate-200 hover:border-brand-secondary/50 rounded-xl p-8 flex flex-col items-center justify-center cursor-pointer transition-colors">
-                    <Upload className="text-slate-400 mb-2" size={24} />
-                    <span className="text-xs font-semibold text-slate-600">Click to Upload Image</span>
-                    <span className="text-[10px] text-slate-400 mt-1">PNG, JPEG, WebP up to 5MB</span>
-                    <input type="file" className="hidden" accept="image/*" onChange={(e) => handleImageUpload(e, "image")} />
+              {activeTab !== "testimonials" && (
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold text-slate-500 uppercase">
+                    {activeTab === "case-studies" ? "Cover Image" : "Image File"}
                   </label>
-                )}
-              </div>
+                  {uploadedImage ? (
+                    <div className="relative aspect-video w-full rounded-xl overflow-hidden border border-slate-100 group">
+                      <img src={uploadedImage.url} className="object-cover w-full h-full" alt="Preview" />
+                      <button
+                        onClick={() => { setUploadedImage(null); handleFormChange("image_url", ""); }}
+                        className="absolute top-2 right-2 p-1.5 bg-red-600 text-white rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"
+                      >
+                        <Trash2 size={14} />
+                      </button>
+                    </div>
+                  ) : (
+                    <label className="border-2 border-dashed border-slate-200 hover:border-brand-secondary/50 rounded-xl p-8 flex flex-col items-center justify-center cursor-pointer transition-colors">
+                      <Upload className="text-slate-400 mb-2" size={24} />
+                      <span className="text-xs font-semibold text-slate-600">Click to Upload Image</span>
+                      <span className="text-[10px] text-slate-400 mt-1">PNG, JPEG, WebP up to 5MB</span>
+                      <input type="file" className="hidden" accept="image/*" onChange={(e) => handleImageUpload(e, "image")} />
+                    </label>
+                  )}
+                </div>
+              )}
 
-              {/* Title parameter (Not for gallery) */}
-              {activeTab !== "gallery" && (
+              {/* Title parameter (Not for gallery or testimonials) */}
+              {activeTab !== "gallery" && activeTab !== "testimonials" && (
                 <div className="space-y-1.5">
                   <label className="text-xs font-bold text-slate-500 uppercase">Title</label>
                   <input
@@ -590,6 +604,32 @@ export default function ManagePagesPortal() {
                     placeholder="Enter item title..."
                   />
                 </div>
+              )}
+
+              {/* Testimonials fields */}
+              {activeTab === "testimonials" && (
+                <>
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-bold text-slate-500 uppercase">Patient Name</label>
+                    <input
+                      type="text"
+                      value={formState.author || ""}
+                      onChange={(e) => handleFormChange("author", e.target.value)}
+                      className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-brand-primary"
+                      placeholder="Enter patient name..."
+                    />
+                  </div>
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-bold text-slate-500 uppercase">Testimonial Content</label>
+                    <textarea
+                      value={formState.text || ""}
+                      onChange={(e) => handleFormChange("text", e.target.value)}
+                      rows={6}
+                      className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-brand-primary"
+                      placeholder="Enter testimonial content..."
+                    />
+                  </div>
+                </>
               )}
 
               {/* Specific Case Studies Fields */}
@@ -761,30 +801,32 @@ export default function ManagePagesPortal() {
             <div className="flex gap-2 pt-2">
               <button
                 onClick={handleSaveDraft}
-                disabled={saving || !uploadedImage}
+                disabled={saving || (activeTab !== "testimonials" && !uploadedImage) || (activeTab === "testimonials" && (!formState.author || !formState.text))}
                 className="flex-1 flex items-center justify-center gap-2 bg-[#02457A] hover:bg-[#02457a]/90 text-white disabled:bg-slate-200 text-xs font-bold py-3 rounded-xl transition-colors cursor-pointer"
               >
                 {saving ? <Loader2 size={12} className="animate-spin" /> : <Save size={12} />}
                 <span>Save Draft</span>
               </button>
 
-              <button
-                onClick={() => {
-                  // Pre-load current draft content into preview overlay state
-                  setPreviewItem({
-                    ...formState,
-                    image_url: uploadedImage?.url,
-                    cover_image_url: uploadedImage?.url,
-                    before_image_url: uploadedBeforeImage?.url,
-                    after_image_url: uploadedAfterImage?.url
-                  });
-                }}
-                disabled={!uploadedImage}
-                className="flex items-center justify-center p-3 bg-slate-100 hover:bg-slate-200 text-slate-700 disabled:bg-slate-50 disabled:text-slate-300 rounded-xl transition-colors cursor-pointer"
-                title="Preview layout"
-              >
-                <Eye size={16} />
-              </button>
+              {activeTab !== "testimonials" && (
+                <button
+                  onClick={() => {
+                    // Pre-load current draft content into preview overlay state
+                    setPreviewItem({
+                      ...formState,
+                      image_url: uploadedImage?.url,
+                      cover_image_url: uploadedImage?.url,
+                      before_image_url: uploadedBeforeImage?.url,
+                      after_image_url: uploadedAfterImage?.url
+                    });
+                  }}
+                  disabled={!uploadedImage}
+                  className="flex items-center justify-center p-3 bg-slate-100 hover:bg-slate-200 text-slate-700 disabled:bg-slate-50 disabled:text-slate-300 rounded-xl transition-colors cursor-pointer"
+                  title="Preview layout"
+                >
+                  <Eye size={16} />
+                </button>
+              )}
             </div>
           </div>
 
@@ -795,6 +837,18 @@ export default function ManagePagesPortal() {
               <span className="text-[10px] text-slate-400 tracking-tight font-normal">Drag handles to re-arrange items.</span>
             </h3>
 
+            {activeTab === "testimonials" && (
+              <div className="mb-4">
+                <input
+                  type="text"
+                  placeholder="Search testimonials by name or content..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-xs focus:outline-none focus:border-[#018ABE]"
+                />
+              </div>
+            )}
+
             {items.length === 0 ? (
               <div className="h-48 flex flex-col items-center justify-center border border-dashed border-slate-200 rounded-xl text-slate-400">
                 <ImageIcon size={28} className="mb-2" />
@@ -802,47 +856,66 @@ export default function ManagePagesPortal() {
               </div>
             ) : (
               <div className="space-y-3">
-                {items.map((item, idx) => (
-                  <div
-                    key={item.id}
-                    draggable
-                    onDragStart={() => handleDragStart(idx)}
-                    onDragOver={(e) => handleDragOver(e, idx)}
-                    onDrop={(e) => handleDrop(e, idx)}
-                    className="flex items-center justify-between gap-4 p-4 bg-slate-50 border border-slate-100 rounded-xl group hover:shadow-md transition-all cursor-grab active:cursor-grabbing"
-                  >
-                    <div className="flex items-center gap-3 min-w-0">
-                      {/* Drag icon */}
-                      <Menu size={16} className="text-slate-400 shrink-0" />
-                      
-                      {/* Image Thumbnail */}
-                      <div className="w-12 h-12 rounded-lg overflow-hidden relative shrink-0 bg-slate-200">
-                        <img 
-                          src={item.image_url || item.cover_image_url} 
-                          alt="Thumb" 
-                          className="object-cover w-full h-full"
-                        />
-                      </div>
+                {items
+                  .filter((item) => {
+                    if (activeTab !== "testimonials") return true;
+                    if (!searchQuery) return true;
+                    const q = searchQuery.toLowerCase();
+                    return (
+                      (item.author || "").toLowerCase().includes(q) ||
+                      (item.text || "").toLowerCase().includes(q)
+                    );
+                  })
+                  .map((item, idx) => (
+                    <div
+                      key={item.id}
+                      draggable
+                      onDragStart={() => handleDragStart(idx)}
+                      onDragOver={(e) => handleDragOver(e, idx)}
+                      onDrop={(e) => handleDrop(e, idx)}
+                      className="flex items-center justify-between gap-4 p-4 bg-slate-50 border border-slate-100 rounded-xl group hover:shadow-md transition-all cursor-grab active:cursor-grabbing"
+                    >
+                      <div className="flex items-center gap-3 min-w-0">
+                        {/* Drag icon */}
+                        <Menu size={16} className="text-slate-400 shrink-0" />
+                        
+                        {/* Image Thumbnail (Hidden for testimonials) */}
+                        {activeTab !== "testimonials" && (
+                          <div className="w-12 h-12 rounded-lg overflow-hidden relative shrink-0 bg-slate-200">
+                            <img 
+                              src={item.image_url || item.cover_image_url} 
+                              alt="Thumb" 
+                              className="object-cover w-full h-full"
+                            />
+                          </div>
+                        )}
 
-                      {/* Details */}
-                      <div className="min-w-0">
-                        <p className="text-xs font-bold text-brand-dark truncate">
-                          {item.title || `Gallery Item #${item.display_order}`}
-                        </p>
-                        <div className="flex items-center gap-2 mt-1">
-                          <span className={`text-[9px] font-bold uppercase px-2 py-0.5 rounded-full ${
-                            item.status === "published" 
-                              ? "bg-emerald-100 text-emerald-800" 
-                              : item.status === "archived"
-                              ? "bg-red-100 text-red-800"
-                              : "bg-amber-100 text-amber-800"
-                          }`}>
-                            {item.status}
-                          </span>
-                          <span className="text-[10px] text-slate-400">Order: {item.display_order}</span>
+                        {/* Details */}
+                        <div className="min-w-0">
+                          <p className="text-xs font-bold text-brand-dark truncate">
+                            {activeTab === "testimonials" 
+                              ? item.author 
+                              : (item.title || `Gallery Item #${item.display_order}`)}
+                          </p>
+                          <div className="flex items-center flex-wrap gap-2 mt-1">
+                            <span className={`text-[9px] font-bold uppercase px-2 py-0.5 rounded-full ${
+                              item.status === "published" 
+                                ? "bg-emerald-100 text-emerald-800" 
+                                : item.status === "archived"
+                                ? "bg-red-100 text-red-800"
+                                : "bg-amber-100 text-amber-800"
+                            }`}>
+                              {item.status}
+                            </span>
+                            <span className="text-[10px] text-slate-400">Order: {item.display_order}</span>
+                            {item.updated_at && (
+                              <span className="text-[10px] text-slate-400">
+                                Updated: {new Date(item.updated_at).toLocaleDateString()}
+                              </span>
+                            )}
+                          </div>
                         </div>
                       </div>
-                    </div>
 
                     {/* Actions block */}
                     <div className="flex items-center gap-1.5 shrink-0 opacity-80 group-hover:opacity-100 transition-opacity">

@@ -13,7 +13,7 @@ export default function ClinicalExcellence() {
 
   return (
     <section className="py-16 md:py-24 bg-white relative overflow-hidden">
-      
+
       {/* Decorative background shape */}
       <div className="absolute inset-0 pointer-events-none opacity-20 z-0">
         <div className="absolute -top-1/4 -right-1/4 w-[500px] h-[500px] rounded-full bg-brand-light/30 blur-3xl" />
@@ -21,10 +21,10 @@ export default function ClinicalExcellence() {
 
       <div className="max-w-7xl mx-auto px-4 md:px-8 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
-          
+
           {/* Left Column: Clinical Excellence Copy */}
           <ScrollReveal direction="left" className="lg:col-span-7 flex flex-col space-y-6 md:space-y-8">
-            
+
             {/* Header section */}
             <div className="space-y-4">
               <span className="text-xs font-bold text-brand-secondary tracking-widest uppercase block">
@@ -55,10 +55,7 @@ export default function ClinicalExcellence() {
 
             {/* Micro stats banner inside the block */}
             <div className="grid grid-cols-3 gap-4 pt-6 border-t border-slate-100 max-w-lg">
-              <div className="text-center md:text-left">
-                <p className="text-2xl md:text-3xl font-bold font-heading text-brand-primary">100%</p>
-                <p className="text-[10px] md:text-xs text-text-body mt-1">Natural Treatment</p>
-              </div>
+
               <div className="text-center md:text-left">
                 <p className="text-2xl md:text-3xl font-bold font-heading text-brand-primary">Modern</p>
                 <p className="text-[10px] md:text-xs text-text-body mt-1">Pathology Lab</p>
@@ -73,9 +70,9 @@ export default function ClinicalExcellence() {
 
           {/* Right Column: Premium Doctor Focus Card */}
           <ScrollReveal direction="right" className="lg:col-span-5 flex justify-center">
-            
+
             <div className="relative group w-full max-w-[340px] md:max-w-[360px] bg-white rounded-[2rem] overflow-hidden shadow-xl border border-slate-100/90 transition-all duration-300 hover:shadow-2xl hover:-translate-y-1">
-              
+
               {/* Doctor portrait wrapper */}
               <div className="relative aspect-[4/5] overflow-hidden bg-slate-50">
                 <Image

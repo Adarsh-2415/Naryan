@@ -28,7 +28,7 @@ export default function ValuesGrid() {
     },
     {
       icon: <Landmark size={26} />,
-      title: "Modern Diagnostic Facilities",
+      title: "Affordable Diagnostic Facilities",
       desc: "Our clinic is equipped with modern pathology and diagnostic facilities to support accurate assessment and effective treatment planning.",
       color: "text-amber-500",
       bgColor: "bg-amber-50",
@@ -38,14 +38,14 @@ export default function ValuesGrid() {
   return (
     <section className="py-16 md:py-24 bg-slate-50/50 border-b border-slate-100">
       <div className="max-w-7xl mx-auto px-4 md:px-8">
-        
+
         {/* Centered Heading */}
         <div className="text-center max-w-xl mx-auto mb-16 space-y-3">
           <h2 className="font-heading font-bold text-3xl md:text-4xl text-brand-dark leading-tight">
             Complete Care on Your Schedule
           </h2>
           <p className="text-brand-secondary font-heading font-medium text-base md:text-lg italic">
-            Bringing Life to Your Smile
+            Homoeo : The Natural Way To Wellness
           </p>
         </div>
 
@@ -59,7 +59,7 @@ export default function ValuesGrid() {
               className="h-full"
             >
               <div className="group relative h-full bg-white rounded-2xl border border-slate-100 p-6 shadow-sm hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 overflow-hidden flex flex-col items-center text-center">
-                
+
                 {/* Custom Border animation highlight (bottom line slide-out from center) */}
                 <div className="absolute bottom-0 left-0 right-0 h-1 bg-brand-secondary scale-x-0 group-hover:scale-x-100 transition-transform duration-350 ease-out origin-center" />
                 <div className="absolute top-0 bottom-0 left-0 right-0 border border-transparent group-hover:border-brand-secondary/20 rounded-2xl transition-all duration-350 pointer-events-none" />

@@ -4,47 +4,64 @@ import { useState, useEffect, useRef } from "react";
 import { Star, Quote } from "lucide-react";
 import ScrollReveal from "./ScrollReveal";
 
-const testimonials = [
+const FALLBACK_TESTIMONIALS = [
   {
     text: "I admire your patience and dedication in spite of the long hours. Your commitment to this profession is truly commendable. Best doctor I have ever seen.",
     author: "Surudai Singh Brar",
-    initials: "SB",
-    relation: "Verified Patient",
   },
   {
     text: "The best homeopathic doctor in Roorkee. I have known him for 10 years. Punctual in time and provides excellent diagnosis. I give him 5 stars.",
     author: "D. Ram Kumar Giri",
-    initials: "RG",
-    relation: "Patient for 10 Years",
   },
   {
     text: "Really the best place to get the right homeopathic medicine, where you can rely upon a qualified and well-experienced homeopathic physician.",
     author: "Dr. Paul Madaan",
-    initials: "PM",
-    relation: "Medical Colleague, India",
   },
   {
     text: "The doctor is very good. He consults very well with patients and dedicates so much time to understanding their concerns.",
     author: "Utkarsh",
-    initials: "U",
-    relation: "Verified Patient",
   },
   {
     text: "It is the best homeopathic clinic. The diagnosis is perfect and Dr. Navneet Sharma provides highly satisfying treatment with a very high success rate.",
     author: "Prabhat Giri",
-    initials: "PG",
-    relation: "Verified Patient",
   },
 ];
 
+const getInitials = (name: string): string => {
+  if (!name) return "";
+  const parts = name.trim().split(/\s+/);
+  if (parts.length === 1) return parts[0].charAt(0).toUpperCase();
+  return (parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase();
+};
+
 export default function Testimonials() {
+  const [items, setItems] = useState<any[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
   const autoPlayRef = useRef<() => void>(() => {});
 
+  useEffect(() => {
+    async function loadTestimonials() {
+      try {
+        const res = await fetch("/api/admin/pages/testimonials?published=true");
+        const data = await res.json();
+        if (data.success && Array.isArray(data.items)) {
+          setItems(data.items);
+        } else {
+          setItems(FALLBACK_TESTIMONIALS);
+        }
+      } catch (err) {
+        console.error("Failed to load testimonials, using local fallback data:", err);
+        setItems(FALLBACK_TESTIMONIALS);
+      }
+    }
+    loadTestimonials();
+  }, []);
+
   // Helper function to shift active index
   const nextSlide = () => {
-    setCurrentIndex((prevIndex) => (prevIndex + 1) % testimonials.length);
+    if (items.length === 0) return;
+    setCurrentIndex((prevIndex) => (prevIndex + 1) % items.length);
   };
 
   useEffect(() => {
@@ -58,7 +75,9 @@ export default function Testimonials() {
     };
     const interval = setInterval(play, 4000); // Shift every 4 seconds
     return () => clearInterval(interval);
-  }, [isHovered]);
+  }, [isHovered, items.length]);
+
+  if (items.length === 0) return null;
 
   return (
     <section className="py-16 md:py-24 bg-white border-b border-slate-100 overflow-hidden">
@@ -89,7 +108,7 @@ export default function Testimonials() {
                   transform: `translateX(-${currentIndex * 100}%)`,
                 }}
               >
-                {testimonials.map((item, idx) => (
+                {items.map((item, idx) => (
                   <div
                     key={idx}
                     className="w-full shrink-0 bg-slate-50/50 hover:bg-white rounded-2xl border border-slate-100 p-6 md:p-8 shadow-sm hover:shadow-xl transition-all duration-300 relative flex flex-col justify-between min-h-[240px] group hover:-translate-y-1"
@@ -115,7 +134,7 @@ export default function Testimonials() {
                     {/* Author Profile bottom line */}
                     <div className="flex items-center gap-3.5 border-t border-slate-100 pt-4 mt-auto">
                       <div className="w-10 h-10 rounded-full bg-brand-light text-brand-primary flex items-center justify-center font-bold text-sm shrink-0 uppercase">
-                        {item.initials}
+                        {getInitials(item.author)}
                       </div>
                       <div>
                         <p className="font-heading font-bold text-sm text-brand-dark">
@@ -131,7 +150,7 @@ export default function Testimonials() {
 
             {/* Pagination indicator dots */}
             <div className="flex justify-center items-center gap-2 mt-10">
-              {testimonials.map((_, idx) => (
+              {items.map((_, idx) => (
                 <button
                   key={idx}
                   onClick={() => setCurrentIndex(idx)}

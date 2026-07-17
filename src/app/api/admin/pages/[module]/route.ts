@@ -9,7 +9,8 @@ const MODULE_TABLES: Record<string, string> = {
   "case-studies": "case_studies",
   "seminars": "seminars",
   "treatments": "treatments",
-  "global-settings": "global_settings"
+  "global-settings": "global_settings",
+  "testimonials": "testimonials"
 };
 
 // GET handler

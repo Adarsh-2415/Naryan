@@ -26,7 +26,7 @@ export default function GalleryPage() {
     fetch("/api/admin/pages/gallery?published=true")
       .then(res => res.json())
       .then(data => {
-        if (data?.success && data?.items?.length > 0) {
+        if (data?.success && Array.isArray(data.items)) {
           setItems(data.items);
         } else {
           setItems(fallbackGalleryItems);

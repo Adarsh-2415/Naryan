@@ -48,15 +48,25 @@ export default function SingleCaseStudyPage() {
           const found = data.items.find((item: any) => slugify(item.title) === slug);
           if (found) {
             setCaseData(found);
-          } else {
+          } else if (slug === "recovery-from-chronic-allergic-asthma-in-children") {
             setCaseData(fallbackCaseData);
+          } else {
+            setCaseData(null);
           }
         } else {
-          setCaseData(fallbackCaseData);
+          if (slug === "recovery-from-chronic-allergic-asthma-in-children") {
+            setCaseData(fallbackCaseData);
+          } else {
+            setCaseData(null);
+          }
         }
       })
       .catch(() => {
-        setCaseData(fallbackCaseData);
+        if (slug === "recovery-from-chronic-allergic-asthma-in-children") {
+          setCaseData(fallbackCaseData);
+        } else {
+          setCaseData(null);
+        }
       })
       .finally(() => {
         setLoading(false);
