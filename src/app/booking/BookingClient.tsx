@@ -335,7 +335,7 @@ export default function BookingPage() {
   };
 
   const handleFetchPatientDetails = async () => {
-    if (!formData.email.trim() || !previousBookingRef.trim()) return;
+    if (!formData.phone.trim() || !previousBookingRef.trim()) return;
 
     setFetchLoading(true);
     setVerificationError("");
@@ -349,7 +349,7 @@ export default function BookingPage() {
         },
         body: JSON.stringify({
           bookingReference: previousBookingRef,
-          email: formData.email
+          phone: formData.phone
         })
       });
 
@@ -361,6 +361,7 @@ export default function BookingPage() {
       setFormData(prev => ({
         ...prev,
         fullName: result.patient.full_name || "",
+        email: result.patient.email || "",
         phone: result.patient.phone || "",
         address: result.patient.address || "",
         age: result.patient.age ? String(result.patient.age) : "",
@@ -545,13 +546,13 @@ export default function BookingPage() {
                     {isReturning && (
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-end animate-fadeIn">
                         <div className="space-y-1">
-                          <label className="text-xs font-bold text-brand-dark/85">Registered Email *</label>
+                          <label className="text-xs font-bold text-brand-dark/85">Registered Mobile Number *</label>
                           <input
-                            type="email"
-                            value={formData.email}
-                            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                            className={`w-full text-sm bg-white border rounded-xl py-2.5 px-4 focus:outline-none focus:ring-2 focus:ring-brand-secondary/30 transition-all ${errors.email ? "border-red-400" : "border-slate-200 focus:border-brand-secondary"}`}
-                            placeholder="john@example.com"
+                            type="tel"
+                            value={formData.phone}
+                            onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                            className={`w-full text-sm bg-white border rounded-xl py-2.5 px-4 focus:outline-none focus:ring-2 focus:ring-brand-secondary/30 transition-all ${errors.phone ? "border-red-400" : "border-slate-200 focus:border-brand-secondary"}`}
+                            placeholder="Enter 10-digit mobile number"
                           />
                         </div>
                         <div className="space-y-1">
@@ -566,7 +567,7 @@ export default function BookingPage() {
                             />
                             <button
                               type="button"
-                              disabled={fetchLoading || !formData.email.trim() || !previousBookingRef.trim()}
+                              disabled={fetchLoading || !formData.phone.trim() || !previousBookingRef.trim()}
                               onClick={handleFetchPatientDetails}
                               className="bg-[#02457A] text-white text-xs font-bold px-4 rounded-xl hover:bg-[#02457A]/90 transition duration-150 disabled:opacity-50 whitespace-nowrap min-h-[42px]"
                             >

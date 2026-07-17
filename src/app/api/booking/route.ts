@@ -78,24 +78,24 @@ export async function POST(req: Request) {
     let isReturning = false;
     if (previousBookingReference) {
       const cleanRef = previousBookingReference.trim().toUpperCase();
-      const cleanEmail = email.trim().toLowerCase();
+      const cleanPhone = phone.trim();
 
       const { data: record } = await supabase
         .from("patient_records")
-        .select("email")
+        .select("phone")
         .eq("booking_reference", cleanRef)
         .maybeSingle();
 
-      if (record && record.email.trim().toLowerCase() === cleanEmail) {
+      if (record && record.phone.trim() === cleanPhone) {
         isReturning = true;
       } else {
         const { data: appRecord } = await supabase
           .from("appointments")
-          .select("email")
+          .select("phone")
           .eq("booking_reference", cleanRef)
           .maybeSingle();
 
-        if (appRecord && appRecord.email.trim().toLowerCase() === cleanEmail) {
+        if (appRecord && appRecord.phone.trim() === cleanPhone) {
           isReturning = true;
         }
       }
