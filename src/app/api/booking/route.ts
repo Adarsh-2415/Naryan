@@ -13,7 +13,7 @@ export async function POST(req: Request) {
     const body = await req.json();
     
     // 1. Basic validation
-    const { fullName, email, phone, address, age, gender, reason, date, time } = body;
+    const { fullName, email, phone, address, age, gender, reason, date, time, previousBookingReference } = body;
     
     if (!fullName || !email || !phone || !address || !date || !time) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
@@ -73,6 +73,33 @@ export async function POST(req: Request) {
     const year = new Date().getFullYear();
     const randomSeq = Math.floor(1000 + Math.random() * 9000);
     const appointmentId = `NHC-${year}-${randomSeq}`;
+
+    // Verify returning patient reference matches database record case-insensitively
+    let isReturning = false;
+    if (previousBookingReference) {
+      const cleanRef = previousBookingReference.trim().toUpperCase();
+      const cleanEmail = email.trim().toLowerCase();
+
+      const { data: record } = await supabase
+        .from("patient_records")
+        .select("email")
+        .eq("booking_reference", cleanRef)
+        .maybeSingle();
+
+      if (record && record.email.trim().toLowerCase() === cleanEmail) {
+        isReturning = true;
+      } else {
+        const { data: appRecord } = await supabase
+          .from("appointments")
+          .select("email")
+          .eq("booking_reference", cleanRef)
+          .maybeSingle();
+
+        if (appRecord && appRecord.email.trim().toLowerCase() === cleanEmail) {
+          isReturning = true;
+        }
+      }
+    }
     
     const bookingData = {
       appointmentId,
@@ -85,6 +112,8 @@ export async function POST(req: Request) {
       reason: reason || "",
       date,
       timeSlot: time,
+      isReturningPatient: isReturning,
+      previousBookingReference: isReturning ? previousBookingReference.trim().toUpperCase() : null
     };
     
     // 6. Dispatch Emails concurrently
@@ -112,7 +141,10 @@ export async function POST(req: Request) {
         appointment_time: time,
         status: "confirmed",
         email_status: isPatientSent ? "sent" : "failed",
-        email_sent_at: isPatientSent ? new Date().toISOString() : null
+        email_sent_at: isPatientSent ? new Date().toISOString() : null,
+        booking_reference: appointmentId,
+        previous_booking_reference: isReturning ? previousBookingReference.trim().toUpperCase() : null,
+        is_returning_patient: isReturning
       })
       .select("id")
       .single();

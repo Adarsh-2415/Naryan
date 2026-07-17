@@ -399,10 +399,7 @@ export default function AboutPage() {
                     <div className="space-y-3.5 text-xs text-text-body/90 font-medium">
                       <div className="space-y-1.5">
                         <span className="font-extrabold text-[#001B4B] block uppercase tracking-wide">PGNAHI (Post Graduate in the National Academy of Homoeopathy, India)</span>
-                        <ul className="list-disc list-inside pl-1 space-y-1 text-[11px] text-slate-500 font-bold">
-                          <li>Advanced Certificate Course in Clinical Oncology</li>
-                          <li>Certificate Course in Clinical Oncology</li>
-                        </ul>
+
                       </div>
                       <div className="space-y-1.5 pt-1">
                         <span className="font-extrabold text-[#001B4B] block uppercase tracking-wide">Life Memberships:</span>

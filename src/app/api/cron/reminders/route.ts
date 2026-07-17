@@ -2,17 +2,24 @@ import { NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 import { transporter } from "@/lib/email/transporter";
 
-function parseAppointmentDateTime(dateStr: string, time12h: string): Date {
-  const [time, modifier] = time12h.split(" ");
+function parseAppointmentDateTime(dateStr: string, timeStr: string): Date {
+  const parts = timeStr.trim().split(" ");
+  const time = parts[0];
+  const modifier = parts[1]; // "AM", "PM" or undefined
+
   let [hoursStr, minutesStr] = time.split(":");
   let hours = parseInt(hoursStr, 10);
   const minutes = parseInt(minutesStr, 10);
-  if (hours === 12) hours = 0;
-  if (modifier === "PM") hours += 12;
+
+  if (modifier) {
+    if (hours === 12) hours = 0;
+    if (modifier === "PM") hours += 12;
+  }
 
   const [year, month, day] = dateStr.split("-").map(Number);
   return new Date(year, month - 1, day, hours, minutes, 0, 0);
 }
+
 
 export async function GET(req: Request) {
   if (!supabase) {

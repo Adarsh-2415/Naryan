@@ -9,4 +9,7 @@ export interface BookingData {
   reason: string;
   date: string;
   timeSlot: string;
+  isReturningPatient?: boolean;
+  previousBookingReference?: string | null;
 }
+

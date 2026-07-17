@@ -53,6 +53,13 @@ export default function BookingPage() {
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
 
+  // Returning Patient State (Option B)
+  const [isReturning, setIsReturning] = useState(false);
+  const [previousBookingRef, setPreviousBookingRef] = useState("");
+  const [fetchLoading, setFetchLoading] = useState(false);
+  const [verificationError, setVerificationError] = useState("");
+  const [verificationSuccess, setVerificationSuccess] = useState(false);
+
   // Date/Time Selection State
   const [selectedDate, setSelectedDate] = useState<string>("");
   const [selectedSlot, setSelectedSlot] = useState<string>("");
@@ -317,8 +324,55 @@ export default function BookingPage() {
     }
     if (!formData.address.trim()) tempErrors.address = "Address is required";
 
+    if (isReturning && previousBookingRef.trim()) {
+      if (!/^NHC-\d{4}-\d{4}$/i.test(previousBookingRef.trim())) {
+        tempErrors.previousBookingRef = "Invalid reference format (Expected: NHC-YYYY-XXXX)";
+      }
+    }
+
     setErrors(tempErrors);
     return Object.keys(tempErrors).length === 0;
+  };
+
+  const handleFetchPatientDetails = async () => {
+    if (!formData.email.trim() || !previousBookingRef.trim()) return;
+
+    setFetchLoading(true);
+    setVerificationError("");
+    setVerificationSuccess(false);
+
+    try {
+      const response = await fetch("/api/patient/verify", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          bookingReference: previousBookingRef,
+          email: formData.email
+        })
+      });
+
+      const result = await response.json();
+      if (!response.ok) {
+        throw new Error(result.error || "Verification failed");
+      }
+
+      setFormData(prev => ({
+        ...prev,
+        fullName: result.patient.full_name || "",
+        phone: result.patient.phone || "",
+        address: result.patient.address || "",
+        age: result.patient.age ? String(result.patient.age) : "",
+        gender: result.patient.gender || ""
+      }));
+      setVerificationSuccess(true);
+    } catch (err: any) {
+      console.error("Fetch patient details error:", err);
+      setVerificationError(err.message || "Failed to retrieve details. Please check the information and try again.");
+    } finally {
+      setFetchLoading(false);
+    }
   };
 
   const handleNextStep = () => {
@@ -363,7 +417,8 @@ export default function BookingPage() {
           gender: formData.gender,
           reason: formData.reason,
           date: selectedDate,
-          time: selectedSlot
+          time: selectedSlot,
+          previousBookingReference: isReturning ? previousBookingRef : null
         })
       });
 
@@ -463,6 +518,82 @@ export default function BookingPage() {
                   <div className="border-b border-slate-100 pb-4">
                     <h2 className="font-heading font-bold text-xl md:text-2xl text-brand-dark">Patient Profile</h2>
                     <p className="text-xs text-text-body/60 mt-0.5">Please provide your contact information to setup the consultation profile.</p>
+                  </div>
+
+                  {/* Returning Patient Option */}
+                  <div className="bg-slate-50/80 p-5 rounded-2xl border border-slate-200/60 space-y-4">
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        id="isReturning"
+                        checked={isReturning}
+                        onChange={(e) => {
+                          setIsReturning(e.target.checked);
+                          if (!e.target.checked) {
+                            setPreviousBookingRef("");
+                            setVerificationError("");
+                            setVerificationSuccess(false);
+                          }
+                        }}
+                        className="rounded text-brand-primary focus:ring-brand-primary h-4 w-4"
+                      />
+                      <label htmlFor="isReturning" className="text-xs font-bold text-brand-dark/85 cursor-pointer select-none">
+                        I am a returning patient (Auto-fill my details)
+                      </label>
+                    </div>
+
+                    {isReturning && (
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-end animate-fadeIn">
+                        <div className="space-y-1">
+                          <label className="text-xs font-bold text-brand-dark/85">Registered Email *</label>
+                          <input
+                            type="email"
+                            value={formData.email}
+                            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                            className={`w-full text-sm bg-white border rounded-xl py-2.5 px-4 focus:outline-none focus:ring-2 focus:ring-brand-secondary/30 transition-all ${errors.email ? "border-red-400" : "border-slate-200 focus:border-brand-secondary"}`}
+                            placeholder="john@example.com"
+                          />
+                        </div>
+                        <div className="space-y-1">
+                          <label className="text-xs font-bold text-brand-dark/85">Previous Booking Reference *</label>
+                          <div className="flex gap-2">
+                            <input
+                              type="text"
+                              value={previousBookingRef}
+                              onChange={(e) => setPreviousBookingRef(e.target.value.toUpperCase())}
+                              className={`w-full text-sm bg-white border rounded-xl py-2.5 px-4 focus:outline-none focus:ring-2 focus:ring-brand-secondary/30 transition-all uppercase placeholder:normal-case ${errors.previousBookingRef ? "border-red-400" : "border-slate-200 focus:border-brand-secondary"}`}
+                              placeholder="NHC-2026-XXXX"
+                            />
+                            <button
+                              type="button"
+                              disabled={fetchLoading || !formData.email.trim() || !previousBookingRef.trim()}
+                              onClick={handleFetchPatientDetails}
+                              className="bg-[#02457A] text-white text-xs font-bold px-4 rounded-xl hover:bg-[#02457A]/90 transition duration-150 disabled:opacity-50 whitespace-nowrap min-h-[42px]"
+                            >
+                              {fetchLoading ? "Fetching..." : "Auto-Fill"}
+                            </button>
+                          </div>
+                        </div>
+
+                        {errors.previousBookingRef && (
+                          <div className="sm:col-span-2 text-[10px] font-bold text-red-500 flex items-center gap-1">
+                            <AlertCircle size={10} /> {errors.previousBookingRef}
+                          </div>
+                        )}
+
+                        {verificationError && (
+                          <div className="sm:col-span-2 text-xs font-bold text-red-500 flex items-center gap-1">
+                            <AlertCircle size={12} /> {verificationError}
+                          </div>
+                        )}
+
+                        {verificationSuccess && (
+                          <div className="sm:col-span-2 text-xs font-bold text-emerald-600 flex items-center gap-1">
+                            <CheckCircle size={12} /> Patient details auto-filled successfully!
+                          </div>
+                        )}
+                      </div>
+                    )}
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-5">

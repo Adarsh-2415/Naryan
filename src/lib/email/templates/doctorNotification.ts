@@ -24,6 +24,16 @@ export const getDoctorNotificationTemplate = (data: BookingData): string => {
           <td style="padding: 12px 0; border-bottom: 1px solid #f1f5f9; font-size: 13px; vertical-align: top; color: #0f172a; font-weight: 700; text-align: right; text-transform: uppercase;">${data.appointmentId}</td>
         </tr>
         <tr>
+          <td style="padding: 12px 0; border-bottom: 1px solid #f1f5f9; font-size: 13px; vertical-align: top; color: #64748b; font-weight: 600; width: 35%; text-align: left;">Patient Type</td>
+          <td style="padding: 12px 0; border-bottom: 1px solid #f1f5f9; font-size: 13px; vertical-align: top; color: ${data.isReturningPatient ? '#0284c7' : '#0f172a'}; font-weight: 700; text-align: right; text-transform: uppercase;">${data.isReturningPatient ? 'Returning Patient' : 'New Patient'}</td>
+        </tr>
+        ${data.isReturningPatient && data.previousBookingReference ? `
+        <tr>
+          <td style="padding: 12px 0; border-bottom: 1px solid #f1f5f9; font-size: 13px; vertical-align: top; color: #64748b; font-weight: 600; width: 35%; text-align: left;">Previous Reference</td>
+          <td style="padding: 12px 0; border-bottom: 1px solid #f1f5f9; font-size: 13px; vertical-align: top; color: #0f172a; font-weight: 700; text-align: right; text-transform: uppercase;">${data.previousBookingReference}</td>
+        </tr>
+        ` : ''}
+        <tr>
           <td style="padding: 12px 0; border-bottom: 1px solid #f1f5f9; font-size: 13px; vertical-align: top; color: #64748b; font-weight: 600; width: 35%; text-align: left;">Patient Name</td>
           <td style="padding: 12px 0; border-bottom: 1px solid #f1f5f9; font-size: 13px; vertical-align: top; color: #0f172a; font-weight: 700; text-align: right; text-transform: uppercase;">${data.fullName}</td>
         </tr>
