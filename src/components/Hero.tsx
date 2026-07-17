@@ -85,15 +85,11 @@ export default function Hero() {
               Narayan Homoeopathic Chikitsalaya Since 1984
             </div>
 
-            {/* Main Headline */}
-            <h1 className="font-heading font-bold text-4xl md:text-5xl lg:text-6xl text-brand-dark leading-[1.1] tracking-tight">
-              <span className="text-brand-primary block mb-2 md:mb-4">
+            <h1 className="font-heading font-bold text-4xl md:text-5xl lg:text-6xl text-[#3F3C94] leading-[1.1] tracking-tight">
+              <span className="block mb-2 md:mb-4">
                 Narayan Homoeopathic Chikitsalaya
               </span>
-              Care for{" "}
-              <span className="bg-gradient-to-r from-brand-secondary via-brand-primary to-cta bg-clip-text text-transparent animate-text-gradient">
-                Lasting Health & Wellness
-              </span>
+              Care for Lasting Health & Wellness
             </h1>
 
             {/* Supporting Description */}

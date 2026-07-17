@@ -44,10 +44,10 @@ export default function Navbar() {
             />
           </div>
           <div className="flex flex-col border-l border-slate-200 pl-2 sm:pl-3">
-            <span className="font-heading font-bold text-[10px] min-[390px]:text-[11px] sm:text-xs text-blue-600 leading-tight">
+            <span className="font-heading font-bold text-[10px] min-[390px]:text-[11px] sm:text-xs text-[#3F3C94] leading-tight">
               नारायण होम्योपैथिक चिकित्सालय
             </span>
-            <span className="font-heading font-bold text-[8px] min-[390px]:text-[9px] sm:text-[10px] text-red-600 leading-tight mt-0.5">
+            <span className="font-heading font-bold text-[8px] min-[390px]:text-[9px] sm:text-[10px] text-[#3F3C94] leading-tight mt-0.5">
               Narayan Homoeopathic Chikitsalaya
             </span>
           </div>

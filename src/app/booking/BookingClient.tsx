@@ -793,6 +793,76 @@ export default function BookingPage() {
 
                   </div>
 
+                  {/* Appointment Guidelines Section */}
+                  <div className="bg-slate-50/70 border border-slate-200/65 rounded-3xl p-5 md:p-6 space-y-4">
+                    <div className="border-b border-slate-200/60 pb-3">
+                      <div className="flex items-center gap-2">
+                        <span className="text-base">📋</span>
+                        <h3 className="font-heading font-extrabold text-sm text-brand-dark uppercase tracking-wider">
+                          Important Appointment Guidelines / महत्वपूर्ण अपॉइंटमेंट दिशा-निर्देश
+                        </h3>
+                      </div>
+                      <p className="text-[11px] font-bold text-brand-dark/70 mt-1 leading-relaxed">
+                        Please read the following instructions carefully before confirming your appointment.<br />
+                        <span className="text-text-body/75 font-semibold">कृपया अपने अपॉइंटमेंट की पुष्टि करने से पहले नीचे दिए गए महत्वपूर्ण निर्देशों को ध्यानपूर्वक पढ़ें।</span>
+                      </p>
+                    </div>
+
+                    <div className="space-y-4 text-xs">
+                      {/* Point 1 */}
+                      <div className="flex gap-3">
+                        <span className="font-extrabold text-[#018ABE] shrink-0 bg-white border border-slate-200/80 rounded-full w-5 h-5 flex items-center justify-center text-[10px]">1</span>
+                        <div className="space-y-0.5">
+                          <p className="font-semibold text-brand-dark/95 leading-relaxed">
+                            To avoid inconvenience, please register your name over the phone before visiting the clinic.
+                          </p>
+                          <p className="text-text-body/75 font-medium leading-relaxed">
+                            असुविधा से बचने के लिए कृपया फोन पर अपना नाम पहले से दर्ज करवा लें।
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Point 2 */}
+                      <div className="flex gap-3">
+                        <span className="font-extrabold text-[#018ABE] shrink-0 bg-white border border-slate-200/80 rounded-full w-5 h-5 flex items-center justify-center text-[10px]">2</span>
+                        <div className="space-y-0.5">
+                          <p className="font-semibold text-brand-dark/95 leading-relaxed">
+                            Your phone appointment will be scheduled only after three (3) waiting patients have been attended.
+                          </p>
+                          <p className="text-text-body/75 font-medium leading-relaxed">
+                            आपका फोन अपॉइंटमेंट तीन (3) प्रतीक्षारत मरीजों के अपॉइंटमेंट के बाद ही होगा।
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Point 3 */}
+                      <div className="flex gap-3">
+                        <span className="font-extrabold text-[#018ABE] shrink-0 bg-white border border-slate-200/80 rounded-full w-5 h-5 flex items-center justify-center text-[10px]">3</span>
+                        <div className="space-y-0.5">
+                          <p className="font-semibold text-brand-dark/95 leading-relaxed">
+                            The appointment time provided is approximate and may change depending on the doctor's consultation schedule.
+                          </p>
+                          <p className="text-text-body/75 font-medium leading-relaxed">
+                            फोन पर दिया गया समय अनुमानित है तथा आवश्यकता अनुसार इसमें परिवर्तन हो सकता है।
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Point 4 */}
+                      <div className="flex gap-3">
+                        <span className="font-extrabold text-[#018ABE] shrink-0 bg-white border border-slate-200/80 rounded-full w-5 h-5 flex items-center justify-center text-[10px]">4</span>
+                        <div className="space-y-0.5">
+                          <p className="font-semibold text-brand-dark/95 leading-relaxed">
+                            If medicines prescribed after consultation are refilled from outside sources, the clinic will not be responsible for their quality, authenticity, or effectiveness.
+                          </p>
+                          <p className="text-text-body/75 font-medium leading-relaxed">
+                            चिकित्सक के परामर्श के बाद यदि दवाइयाँ बाहर से पुनः बनवाई जाती हैं, तो उनकी गुणवत्ता एवं प्रभावशीलता के लिए हमारी कोई जिम्मेदारी नहीं होगी।
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
                   {/* Warning dynamic exclusion notice */}
                   <div className="bg-blue-50/50 border border-blue-100/50 rounded-2xl p-4 flex gap-3 text-xs text-[#02457A]">
                     <Clock size={16} className="shrink-0 text-[#018ABE] mt-0.5" />

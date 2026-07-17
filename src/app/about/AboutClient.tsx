@@ -112,7 +112,7 @@ export default function AboutPage() {
         <section className="bg-brand-dark py-12 text-white relative overflow-hidden">
           <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px]" />
           <div className="max-w-7xl mx-auto px-4 md:px-8 relative z-10">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center divide-y md:divide-y-0 md:divide-x divide-white/10">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center divide-y md:divide-y-0 md:divide-x divide-white/10">
               <div className="pt-4 md:pt-0">
                 <p className="text-3xl md:text-4xl font-heading font-extrabold text-brand-light">1984</p>
                 <p className="text-xs md:text-sm text-slate-300 mt-1 uppercase tracking-wider">Year Founded</p>
@@ -124,10 +124,6 @@ export default function AboutPage() {
               <div className="pt-4 md:pt-0">
                 <p className="text-3xl md:text-4xl font-heading font-extrabold text-brand-light">100%</p>
                 <p className="text-xs md:text-sm text-slate-300 mt-1 uppercase tracking-wider">Safe & Natural</p>
-              </div>
-              <div className="pt-4 md:pt-0">
-                <p className="text-3xl md:text-4xl font-heading font-extrabold text-brand-light font-sans">98%</p>
-                <p className="text-xs md:text-sm text-slate-300 mt-1 uppercase tracking-wider">Success Rate</p>
               </div>
             </div>
           </div>
