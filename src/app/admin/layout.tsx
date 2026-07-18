@@ -16,12 +16,14 @@ import {
   Clock,
   MessageSquare
 } from "lucide-react";
+import { getUserRole, isRouteAllowed } from "@/lib/roles";
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [session, setSession] = useState<any>(null);
+  const [role, setRole] = useState<"admin" | "receptionist">("admin");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const isLoginPage = pathname === "/admin/login";
@@ -35,6 +37,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     // Check active session
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
+      if (session) {
+        const uRole = getUserRole(session.user);
+        setRole(uRole);
+        if (!isRouteAllowed(uRole, pathname)) {
+          router.push("/admin/appointments");
+        }
+      }
       if (!session && !isLoginPage) {
         router.push("/admin/login");
       } else if (session && isLoginPage) {
@@ -46,6 +55,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
+      if (session) {
+        const uRole = getUserRole(session.user);
+        setRole(uRole);
+        if (!isRouteAllowed(uRole, pathname)) {
+          router.push("/admin/appointments");
+        }
+      }
       if (!session && !isLoginPage) {
         router.push("/admin/login");
       }
@@ -53,7 +69,17 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     });
 
     return () => subscription.unsubscribe();
-  }, [isLoginPage, router]);
+  }, [isLoginPage, router, pathname]);
+
+  // Secondary route guard during page transitions
+  useEffect(() => {
+    if (session) {
+      const uRole = getUserRole(session.user);
+      if (!isRouteAllowed(uRole, pathname)) {
+        router.push("/admin/appointments");
+      }
+    }
+  }, [pathname, session, router]);
 
   const handleLogout = async () => {
     if (supabase) {
@@ -90,7 +116,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     { name: "Contact Queries", href: "/admin/queries", icon: MessageSquare },
     { name: "Manage Pages", href: "/admin/pages", icon: FileText },
     { name: "Change Password", href: "/admin/change-password", icon: Lock }
-  ];
+  ].filter(item => isRouteAllowed(role, item.href));
 
   return (
     <div className="min-h-screen bg-slate-50 flex">
@@ -133,8 +159,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               {session.user?.email?.[0].toUpperCase() || "A"}
             </div>
             <div className="min-w-0 flex-1">
-              <p className="text-xs font-bold text-white truncate">{session.user?.email || "Administrator"}</p>
-              <p className="text-[10px] text-[#018ABE] font-bold">SYSTEM ADMIN</p>
+              <p className="text-xs font-bold text-white truncate">{session.user?.email || "User"}</p>
+              <p className="text-[10px] text-[#018ABE] font-bold">
+                {role === "admin" ? "SYSTEM ADMIN" : "RECEPTIONIST"}
+              </p>
             </div>
           </div>
           <button
@@ -228,7 +256,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 </div>
                 <div>
                   <p className="text-xs font-bold text-white truncate">{session.user?.email}</p>
-                  <p className="text-[10px] text-[#018ABE] font-bold">SYSTEM ADMIN</p>
+                  <p className="text-[10px] text-[#018ABE] font-bold">
+                    {role === "admin" ? "SYSTEM ADMIN" : "RECEPTIONIST"}
+                  </p>
                 </div>
               </div>
               <button

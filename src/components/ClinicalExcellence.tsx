@@ -2,6 +2,7 @@
 
 import { Check, ShieldCheck, Heart, Award } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import ScrollReveal from "./ScrollReveal";
 
 export default function ClinicalExcellence() {
@@ -53,16 +54,33 @@ export default function ClinicalExcellence() {
               ))}
             </div>
 
-            {/* Micro stats banner inside the block */}
-            <div className="grid grid-cols-3 gap-4 pt-6 border-t border-slate-100 max-w-lg">
-
-              <div className="text-center md:text-left">
-                <p className="text-2xl md:text-3xl font-bold font-heading text-brand-primary">Modern</p>
-                <p className="text-[10px] md:text-xs text-text-body mt-1">Pathology Lab</p>
-              </div>
-              <div className="text-center md:text-left">
-                <p className="text-2xl md:text-3xl font-bold font-heading text-brand-primary">Direct</p>
-                <p className="text-[10px] md:text-xs text-text-body mt-1">Consultation</p>
+            {/* Call to Action Buttons Row */}
+            <div className="pt-6 border-t border-slate-100 max-w-xl w-full">
+              <div className="grid grid-cols-3 gap-2.5 md:gap-4">
+                <Link
+                  href="/awards"
+                  className="flex flex-col items-center justify-center p-3 rounded-2xl bg-slate-50 border border-slate-100 hover:border-brand-secondary/30 hover:bg-brand-light/10 text-center transition-all duration-300 hover:shadow-md group cursor-pointer"
+                >
+                  <span className="text-xl mb-1.5 transition-transform duration-300 group-hover:scale-115">🏆</span>
+                  <span className="font-heading font-extrabold text-[10px] md:text-xs text-brand-dark transition-colors duration-300 group-hover:text-brand-secondary block leading-tight">Explore Awards</span>
+                  <span className="text-[8px] text-text-body/60 mt-1.5 hidden md:block leading-tight">Discover our prestigious Awards</span>
+                </Link>
+                <Link
+                  href="/case-studies"
+                  className="flex flex-col items-center justify-center p-3 rounded-2xl bg-slate-50 border border-slate-100 hover:border-brand-secondary/30 hover:bg-brand-light/10 text-center transition-all duration-300 hover:shadow-md group cursor-pointer"
+                >
+                  <span className="text-xl mb-1.5 transition-transform duration-300 group-hover:scale-115">📖</span>
+                  <span className="font-heading font-extrabold text-[10px] md:text-xs text-brand-dark transition-colors duration-300 group-hover:text-brand-secondary block leading-tight">Read Case Studies</span>
+                  <span className="text-[8px] text-text-body/60 mt-1.5 hidden md:block leading-tight">Insightful clinical recovery cases</span>
+                </Link>
+                <Link
+                  href="/seminars"
+                  className="flex flex-col items-center justify-center p-3 rounded-2xl bg-slate-50 border border-slate-100 hover:border-brand-secondary/30 hover:bg-brand-light/10 text-center transition-all duration-300 hover:shadow-md group cursor-pointer"
+                >
+                  <span className="text-xl mb-1.5 transition-transform duration-300 group-hover:scale-115">🎤</span>
+                  <span className="font-heading font-extrabold text-[10px] md:text-xs text-brand-dark transition-colors duration-300 group-hover:text-brand-secondary block leading-tight">View Seminars</span>
+                  <span className="text-[8px] text-text-body/60 mt-1.5 hidden md:block leading-tight">Access our seminars & talks</span>
+                </Link>
               </div>
             </div>
 

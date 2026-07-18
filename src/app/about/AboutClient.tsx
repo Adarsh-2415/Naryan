@@ -231,7 +231,7 @@ export default function AboutPage() {
                     <span className="h-px w-8 bg-gradient-to-l from-transparent to-brand-secondary/60" />
                   </div>
                   <h3 className="font-heading font-bold text-xl md:text-2xl text-brand-dark tracking-tight">
-                    Late.Dr.J.N Sharma
+                    Late Dr.JN Sharma (Ph.D)
                   </h3>
                 </div>
               </div>
@@ -350,18 +350,18 @@ export default function AboutPage() {
                     <p className="text-xs font-bold text-brand-secondary uppercase tracking-wider">Reg. No. : H-0104(U.K.H.M.B)</p>
                   </div>
                   <div className="space-y-4 text-left pt-2">
-                    <h4 className="font-heading font-extrabold text-[11px] uppercase tracking-wider text-[#018ABE] border-b border-slate-100 pb-2">Academic Achievements & Memberships</h4>
+                    <h4 className="font-heading font-extrabold text-xs md:text-sm uppercase tracking-wider text-[#001B4B] border-b border-slate-100 pb-2">Academic Achievements & Memberships</h4>
                     <div className="space-y-3.5 text-xs text-text-body/90 font-medium">
                       <div className="space-y-1.5">
-                        <span className="font-extrabold text-[#001B4B] block uppercase tracking-wide">PGNAHI (Post Graduate in the National Academy of Homoeopathy, India)</span>
-                        <ul className="list-disc list-inside pl-1 space-y-1 text-[11px] text-slate-500 font-bold">
+                        <span className="font-extrabold text-[#001B4B] block uppercase tracking-wide text-xs md:text-sm">PGNAHI</span>
+                        <ul className="list-disc list-inside pl-1 space-y-1 text-[12px] md:text-[13px] text-slate-500 font-bold">
                           <li>Advanced Certificate Course in Clinical Oncology</li>
                           <li>Certificate Course in Clinical Oncology</li>
                         </ul>
                       </div>
                       <div className="space-y-1.5 pt-1">
-                        <span className="font-extrabold text-[#001B4B] block uppercase tracking-wide">Life Memberships:</span>
-                        <ul className="list-disc list-inside pl-1 space-y-1 text-[11px] text-slate-500 font-bold">
+                        <span className="font-extrabold text-[#001B4B] block uppercase tracking-wide text-xs md:text-sm">Life Memberships:</span>
+                        <ul className="list-disc list-inside pl-1 space-y-1 text-[12px] md:text-[13px] text-slate-500 font-bold">
                           <li>Liga Medicorum Homoeopathica Internationalis</li>
                           <li>Homoeopathic Medical Association of India</li>
                           <li>South Delhi Homoeopathic Association</li>
@@ -387,19 +387,18 @@ export default function AboutPage() {
                 <div className="p-8 text-center space-y-4 flex-grow flex flex-col">
                   <div className="space-y-1">
                     <h3 className="font-heading font-bold text-xl md:text-2xl text-brand-dark">Dr. Asha Sharma</h3>
-                    <p className="text-xs font-bold text-brand-secondary uppercase tracking-wider">D.H.M.S</p>
+                    <p className="text-xs font-bold text-brand-secondary uppercase tracking-wider">B.Sc. , D.H.M.S</p>
                     <p className="text-xs font-bold text-brand-secondary uppercase tracking-wider">Reg. No. : H-0105(U.K.H.M.B)</p>
                   </div>
                   <div className="space-y-4 text-left pt-2">
-                    <h4 className="font-heading font-extrabold text-[11px] uppercase tracking-wider text-[#018ABE] border-b border-slate-100 pb-2">Academic Achievements & Memberships</h4>
+                    <h4 className="font-heading font-extrabold text-xs md:text-sm uppercase tracking-wider text-[#001B4B] border-b border-slate-100 pb-2">Academic Achievements & Memberships</h4>
                     <div className="space-y-3.5 text-xs text-text-body/90 font-medium">
                       <div className="space-y-1.5">
-                        <span className="font-extrabold text-[#001B4B] block uppercase tracking-wide">PGNAHI (Post Graduate in the National Academy of Homoeopathy, India)</span>
-
+                        <span className="font-extrabold text-[#001B4B] block uppercase tracking-wide text-xs md:text-sm">PGNAHI</span>
                       </div>
                       <div className="space-y-1.5 pt-1">
-                        <span className="font-extrabold text-[#001B4B] block uppercase tracking-wide">Life Memberships:</span>
-                        <ul className="list-disc list-inside pl-1 space-y-1 text-[11px] text-slate-500 font-bold">
+                        <span className="font-extrabold text-[#001B4B] block uppercase tracking-wide text-xs md:text-sm">Life Memberships:</span>
+                        <ul className="list-disc list-inside pl-1 space-y-1 text-[12px] md:text-[13px] text-slate-500 font-bold">
                           <li>India Institute of Homoeopathic Physicians</li>
                         </ul>
                       </div>

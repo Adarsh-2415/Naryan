@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 import { createClient } from "@supabase/supabase-js";
+import { getUserRole } from "@/lib/roles";
 
 // Map URL module path keys to correct database tables
 const MODULE_TABLES: Record<string, string> = {
@@ -12,6 +13,8 @@ const MODULE_TABLES: Record<string, string> = {
   "global-settings": "global_settings",
   "testimonials": "testimonials"
 };
+
+import { verifyAdmin } from "@/lib/roles";
 
 // GET handler
 export async function GET(req: NextRequest, props: { params: Promise<{ module: string }> }) {
@@ -26,6 +29,10 @@ export async function GET(req: NextRequest, props: { params: Promise<{ module: s
     const url = new URL(req.url);
     const publishedOnly = url.searchParams.get("published") === "true";
     const supabaseClient = getAuthenticatedClient(req);
+
+    if (!publishedOnly && !(await verifyAdmin(supabaseClient))) {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
 
     let query = supabaseClient.from(table).select("*");
 
@@ -81,6 +88,10 @@ export async function POST(req: NextRequest, props: { params: Promise<{ module: 
     const body = await req.json();
     const supabaseClient = getAuthenticatedClient(req);
 
+    if (!(await verifyAdmin(supabaseClient))) {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
+
     // Enforce default workflow state
     if (table !== "global_settings") {
       body.status = "draft";
@@ -114,6 +125,10 @@ export async function PUT(req: NextRequest, props: { params: Promise<{ module: s
     const url = new URL(req.url);
     const id = url.searchParams.get("id");
     const supabaseClient = getAuthenticatedClient(req);
+
+    if (!(await verifyAdmin(supabaseClient))) {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
 
     // Check if it's a batch drag-and-drop display order sync
     const isReorder = url.searchParams.get("action") === "reorder";
@@ -179,6 +194,10 @@ export async function DELETE(req: NextRequest, props: { params: Promise<{ module
 
   try {
     const supabaseClient = getAuthenticatedClient(req);
+
+    if (!(await verifyAdmin(supabaseClient))) {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
 
     // 1. Retrieve the existing record so we can clean up any associated storage files
     const { data: record, error: getError } = await supabaseClient

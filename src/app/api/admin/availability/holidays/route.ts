@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { verifyAdmin } from "@/lib/roles";
 
 function getAuthenticatedClient(req: Request) {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
@@ -18,6 +19,9 @@ function getAuthenticatedClient(req: Request) {
 export async function GET(req: NextRequest) {
   try {
     const supabaseClient = getAuthenticatedClient(req);
+    if (!(await verifyAdmin(supabaseClient))) {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
     const { data, error } = await supabaseClient
       .from("availability_exceptions")
       .select("*")
@@ -42,6 +46,9 @@ export async function POST(req: NextRequest) {
     }
 
     const supabaseClient = getAuthenticatedClient(req);
+    if (!(await verifyAdmin(supabaseClient))) {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
 
     // Verify uniqueness
     const { data: existing } = await supabaseClient
@@ -79,6 +86,9 @@ export async function PUT(req: NextRequest) {
     const body = await req.json();
     const { reason, is_active } = body;
     const supabaseClient = getAuthenticatedClient(req);
+    if (!(await verifyAdmin(supabaseClient))) {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
 
     const updatePayload: any = {};
     if (typeof is_active === "boolean") updatePayload.is_active = is_active;
@@ -108,6 +118,9 @@ export async function DELETE(req: NextRequest) {
     }
 
     const supabaseClient = getAuthenticatedClient(req);
+    if (!(await verifyAdmin(supabaseClient))) {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
     const { error } = await supabaseClient
       .from("availability_exceptions")
       .delete()

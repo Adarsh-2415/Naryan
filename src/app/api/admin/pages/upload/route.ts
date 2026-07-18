@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { getUserRole } from "@/lib/roles";
 
 export async function POST(req: Request) {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
@@ -20,6 +21,12 @@ export async function POST(req: Request) {
       headers: token ? { Authorization: `Bearer ${token}` } : {}
     }
   });
+
+  // Get user and verify admin role
+  const { data: { user }, error: authError } = await supabaseClient.auth.getUser();
+  if (authError || !user || getUserRole(user) !== "admin") {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
 
   try {
     const formData = await req.formData();

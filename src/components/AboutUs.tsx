@@ -70,7 +70,7 @@ export default function AboutUs() {
             {/* CTA Button */}
             <div className="pt-2">
               <a
-                href="/booking"
+                href="/about"
                 className="inline-flex items-center gap-2 bg-white hover:bg-slate-50 text-brand-primary border border-slate-200 font-semibold px-6 py-3.5 rounded-full transition-all duration-200 shadow-sm hover:shadow focus:outline-none focus:ring-2 focus:ring-brand-primary/20"
               >
                 <Calendar size={18} className="text-brand-secondary" />

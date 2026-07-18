@@ -16,10 +16,13 @@ import {
   Inbox
 } from "lucide-react";
 
+import { getUserRole } from "@/lib/roles";
+
 export default function AdminDashboard() {
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [role, setRole] = useState<"admin" | "receptionist">("admin");
 
   const fetchStats = async () => {
     setLoading(true);
@@ -30,6 +33,9 @@ export default function AdminDashboard() {
         const token = session?.access_token;
         if (token) {
           headers["Authorization"] = `Bearer ${token}`;
+        }
+        if (session?.user) {
+          setRole(getUserRole(session.user));
         }
       }
       const res = await fetch("/api/admin/stats", { headers });
@@ -99,12 +105,21 @@ export default function AdminDashboard() {
       trend: "All-time" 
     },
     { 
+      title: "This Month Appointments", 
+      value: stats?.monthAppointments || 0, 
+      icon: Calendar, 
+      link: "/admin/appointments", 
+      color: "bg-teal-50 text-teal-600 border-teal-100", 
+      trend: "This Month" 
+    },
+    { 
       title: "Contact Queries", 
       value: stats?.contactQueries || 0, 
       icon: MessageSquare, 
       link: "/admin/queries", 
       color: "bg-purple-50 text-purple-600 border-purple-100", 
-      trend: "Messages" 
+      trend: "Messages",
+      adminOnly: true
     },
     { 
       title: "Published Gallery", 
@@ -112,9 +127,10 @@ export default function AdminDashboard() {
       icon: Image, 
       link: "/admin/pages", 
       color: "bg-amber-50 text-amber-600 border-amber-100", 
-      trend: "Live Images" 
+      trend: "Live Images",
+      adminOnly: true
     }
-  ];
+  ].filter(card => !card.adminOnly || role === "admin");
 
   return (
     <div className="space-y-8 font-sans animate-in fade-in duration-300">
