@@ -13,6 +13,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { supabase } from "@/lib/supabase";
 import BookingCalendar from "@/components/BookingCalendar";
+import VoiceAssistant from "@/components/VoiceAssistant";
 
 // Steps definition
 const STEPS = [
@@ -972,6 +973,18 @@ export default function BookingPage() {
 
         </div>
       </main>
+
+      <VoiceAssistant
+        formData={formData}
+        setFormData={setFormData}
+        isReturning={isReturning}
+        setIsReturning={setIsReturning}
+        previousBookingRef={previousBookingRef}
+        setPreviousBookingRef={setPreviousBookingRef}
+        currentStep={currentStep}
+        setCurrentStep={setCurrentStep}
+        handleFetchPatientDetails={handleFetchPatientDetails}
+      />
 
       <Footer />
     </>
