@@ -26,14 +26,18 @@ Language context: "${language}"
 User spoken transcript: "${transcript}"
 
 Task: Extract and format the clean field value accurately according to these rules:
-- If step is "name": Extract clean full name, capitalized. Remove conversational prefixes like "mera naam hai", "my name is", "naam hai", "I am".
+- CRITICAL: All extracted values MUST be returned in standard English characters (Latin script) only.
+- Never return Devanagari or Hindi characters (like 'आदर्श', 'कुमार', 'शर्मा') in the cleanValue output.
+- If the user speaks or the transcript contains Hindi script, translate or transliterate it to standard English alphabets (e.g. "आदर्श" to "Adarsh", "राहुल शर्मा" to "Rahul Sharma", "सिविल लाइन्स" to "Civil Lines").
+- If step is "name": Extract clean full name, capitalized in English. Remove conversational prefixes like "mera naam hai", "my name is", "naam hai", "I am".
 - If step is "phone": Extract 10 digits only. Convert spoken number words to digits.
-- If step is "email": Format into a valid email address. Convert spoken phrases like "at the rate", "at the rate of", "at rate", "at", "एट द रेट" to "@" AND "dot", "point", "डॉट" to ".". Remove ALL spaces in email addresses.
-- If step is "address": Clean up address text formatting.
+- If step is "email": Format into a valid email address using English characters. Convert spoken phrases like "at the rate", "at the rate of", "at rate", "at", "एट द रेट" to "@" AND "dot", "point", "डॉट" to ".". Remove ALL spaces and translate any Hindi characters to English equivalents (e.g., convert "आदर्शrke2004@gmail.com" to "adarshrke2004@gmail.com").
+- If step is "address": Clean up address text formatting and write in English script.
 - If step is "age": Extract numeric age as string.
 - If step is "gender": Return strictly "Male", "Female", or "Other".
 
 Respond ONLY with a raw JSON object containing one key: "cleanValue". No markdown code blocks, no extra text.
+Example Input: "आदर्शrke2004@gmail.com"
 Example JSON: {"cleanValue": "adarshrke2004@gmail.com"}`;
 
     const modelsToTry = [
@@ -106,6 +110,27 @@ Example JSON: {"cleanValue": "adarshrke2004@gmail.com"}`;
   }
 }
 
+// Transliterates Devanagari (Hindi) script into Latin (English) characters
+function transliterateDevanagari(text: string): string {
+  const charMap: Record<string, string> = {
+    'अ': 'a', 'आ': 'aa', 'इ': 'i', 'ई': 'ee', 'उ': 'u', 'ऊ': 'oo', 'ए': 'e', 'ऐ': 'ai', 'ओ': 'o', 'औ': 'au',
+    'क': 'k', 'ख': 'kh', 'ग': 'g', 'घ': 'gh', 'ङ': 'n',
+    'च': 'ch', 'छ': 'chh', 'ज': 'j', 'झ': 'jh', 'ञ': 'n',
+    'ट': 't', 'ठ': 'th', 'ड': 'd', 'ढ': 'dh', 'ण': 'n',
+    'त': 't', 'थ': 'th', 'द': 'd', 'ध': 'dh', 'न': 'n',
+    'प': 'p', 'फ': 'ph', 'ब': 'b', 'भ': 'bh', 'म': 'm',
+    'य': 'y', 'र': 'r', 'ल': 'l', 'व': 'v', 'श': 'sh', 'ष': 'sh', 'स': 's', 'ह': 'h',
+    'ा': 'a', 'ि': 'i', 'ी': 'ee', 'ु': 'u', 'ू': 'oo', 'े': 'e', 'ै': 'ai', 'ो': 'o', 'ौ': 'au', 'ं': 'n', '्': '',
+    '०': '0', '१': '1', '२': '2', '३': '3', '४': '4', '५': '5', '६': '6', '७': '7', '८': '8', '९': '9'
+  };
+  let result = '';
+  for (const char of text) {
+    result += charMap[char] || char;
+  }
+  // Strip any remaining Devanagari characters or halant marks
+  return result.replace(/[\u0900-\u097F]/g, '');
+}
+
 // Robust local entity parser
 function fallbackLocalParser(step: string, input: string): string {
   const cleanInput = input.trim();
@@ -114,7 +139,8 @@ function fallbackLocalParser(step: string, input: string): string {
       let extractedName = cleanInput
         .replace(/^(my name is|i am|im|mera naam hai|mera naam|naam hai|naam|this is|i'm|मेरा नाम है|मेरा नाम|नाम|मैं हूँ)\s+/i, "")
         .replace(/\s+(hai|है)$/i, "");
-      return extractedName.split(" ").map((w: string) => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
+      const transliterated = transliterateDevanagari(extractedName);
+      return transliterated.split(" ").map((w: string) => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
     }
     case "phone": {
       let text = cleanInput.toLowerCase();
@@ -149,10 +175,10 @@ function fallbackLocalParser(step: string, input: string): string {
           email = `${parts[0]}@${parts[1]}.com`;
         }
       }
-      return email;
+      return transliterateDevanagari(email);
     }
     case "address":
-      return cleanInput;
+      return transliterateDevanagari(cleanInput);
     case "age": {
       let text = cleanInput.toLowerCase();
       const numMap: Record<string, string> = {
